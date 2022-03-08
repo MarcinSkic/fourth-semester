@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formularze - Lab1</title>
+</head>
+
+<body>
+    <h2 id="baner">Szybki kurs HTML</h2>
+    <div id="menu"><a href="../index.html">Podstawowe znaczniki</a> <a href="tables.html">Tworzenie tabel</a> <a
+            href="forms.html">Budowa formularzy</a></div>
+    <div id="tresc">
+        <h2 style="color: white; background-color: blue; padding: 5px; text-align: center;">Tu kiedyś będą formularze
+        </h2>
+        <div>
+            <form action="mailto:beatap@cs.pollub.pl" method="post">
+                <!-- Przykładowe typy znacznika input -->
+                Podaj login: <input type="text" name="login" /> <br />
+                Podaj hasło: <input type="password" name="pass" /> <br /><br />
+                Wybierz ulubione języki programowania: <br />
+                <input type="checkbox" name="C" value="C" /> Język C/C++
+                <input type="checkbox" name="Java" value="J" /> Język Java
+                <input type="checkbox" name="PHP" value="PHP" /> Język PHP <br />
+                Wybierz przeglądarkę, z której korzystasz najczęściej: <br />
+                <input type="radio" name="przegladarka" value="Ff" /> Firefox <br />
+                <input type="radio" name="przegladarka" value="Ch" /> Chrome <br />
+                <input type="radio" name="przegladarka" value="II" />
+                Internet Explorer<br />
+                <input type="submit" value="Wyślij" />
+                <input type="reset" value="Wyczyść" />
+                <!-- Inne znaczniki pól formularza -->
+                <br />Wskaż hobby i uzasadnij dlaczego to lubisz:
+                <br />
+                <select size="3" name="hobby" multiple="multiple">
+                    <option value="t">Turystyka</option>
+                    <option value="m">Muzyka</option>
+                    <option value="f">Film</option>
+                    <option value="s">Sport</option>
+                    <option value="i">Inne</option>
+                </select><br />
+                <textarea cols="10" rows="3" name="opinia">
+                Po prostu lubię.
+                </textarea><br />
+                <button name="Kliknij" value="Klikniety">
+                    Kliknij tutaj
+                </button>
+            </form>
+        </div>
+    </div>
+    <div id="stopka">&copy;BP</div>
+</body>
+
+</html>
