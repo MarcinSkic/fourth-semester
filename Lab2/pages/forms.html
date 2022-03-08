@@ -12,40 +12,38 @@
     <div id="menu"><a href="../index.html">Podstawowe znaczniki</a> <a href="tables.html">Tworzenie tabel</a> <a
             href="forms.html">Budowa formularzy</a></div>
     <div id="tresc">
-        <h2 style="color: white; background-color: blue; padding: 5px; text-align: center;">Tu kiedyś będą formularze
-        </h2>
+        <h3>Podstawowe znaczniki formularza HTML to:</h3>
+        <ul>
+            <li>&lt;form&gt; - znacznik podstawowy zawierający pola formularza</li>
+            <li>&lt;input&lt; - znacznik umożliwia wstawienie różnych pól (pole tekstowe, przycisk typu radio, zależności od wartości jego atrybutu type</li>
+            <li>&lt;select&gt; - pole formularza typu lista rozwijana</li>
+            <li>&lt;textarea&gt; - pole formularza typu obszar tekstowy</li>
+            <li>&lt;button&gt; - pole formularza typu przycisk</li>
+        </ul>
         <div>
-            <form action="mailto:beatap@cs.pollub.pl" method="post">
-                <!-- Przykładowe typy znacznika input -->
-                Podaj login: <input type="text" name="login" /> <br />
-                Podaj hasło: <input type="password" name="pass" /> <br /><br />
-                Wybierz ulubione języki programowania: <br />
-                <input type="checkbox" name="C" value="C" /> Język C/C++
-                <input type="checkbox" name="Java" value="J" /> Język Java
-                <input type="checkbox" name="PHP" value="PHP" /> Język PHP <br />
-                Wybierz przeglądarkę, z której korzystasz najczęściej: <br />
-                <input type="radio" name="przegladarka" value="Ff" /> Firefox <br />
-                <input type="radio" name="przegladarka" value="Ch" /> Chrome <br />
-                <input type="radio" name="przegladarka" value="II" />
-                Internet Explorer<br />
-                <input type="submit" value="Wyślij" />
-                <input type="reset" value="Wyczyść" />
-                <!-- Inne znaczniki pól formularza -->
-                <br />Wskaż hobby i uzasadnij dlaczego to lubisz:
-                <br />
-                <select size="3" name="hobby" multiple="multiple">
-                    <option value="t">Turystyka</option>
-                    <option value="m">Muzyka</option>
-                    <option value="f">Film</option>
-                    <option value="s">Sport</option>
-                    <option value="i">Inne</option>
+            <h3>Przykładowy formularz HTML:</h3>
+            <form action="mailto:s95565@pollub.pl" method="post">
+                Nazwisko: <input type="text" name="surname" /> <br />
+                Wiek:<input type="number" name="age" /> <br />
+                Państwo: <select name="country">
+                    <option value="pl">Polska</option>
+                    <option value="de">Niemcy</option>
+                    <option value="gb">Wielka Brytania</option>
+                    <option value="fr">Francja</option>
                 </select><br />
-                <textarea cols="10" rows="3" name="opinia">
-                Po prostu lubię.
-                </textarea><br />
-                <button name="Kliknij" value="Klikniety">
-                    Kliknij tutaj
-                </button>
+                Adres e-mail: <input type="email" name="email"> <br />
+
+                <h4>Zamawiam tutorial z języka:</h4>
+                <input type="checkbox" name="PHP" value="PHP" /> PHP
+                <input type="checkbox" name="C" value="C" /> C/C++
+                <input type="checkbox" name="Java" value="J" /> Java
+                
+                <h4>Sposób zapłaty:</h4>
+                <input type="radio" name="payment" value="eu" /> eurocard
+                <input type="radio" name="payment" value="visa" /> visa
+                <input type="radio" name="payment" value="transfer" /> przelew bankowy <br />
+                <input type="submit" value="Wyślij" />
+                <input type="reset" value="Anuluj" />
             </form>
         </div>
     </div>
