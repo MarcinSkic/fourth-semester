@@ -7,6 +7,7 @@
     <title>Formularze - Lab1</title>
 
     <link href="../CSS/style.css" rel="stylesheet">
+    <link href="../CSS/forms.css" rel="stylesheet">
 </head>
 
 <body>
@@ -25,25 +26,27 @@
         <div>
             <h3>Przykładowy formularz HTML:</h3>
             <form action="mailto:s95565@pollub.pl" method="post">
-                Nazwisko: <input type="text" name="surname" /> <br />
-                Wiek:<input type="number" name="age" /> <br />
-                Państwo: <select name="country">
-                    <option value="pl">Polska</option>
-                    <option value="de">Niemcy</option>
-                    <option value="gb">Wielka Brytania</option>
-                    <option value="fr">Francja</option>
-                </select><br />
-                Adres e-mail: <input type="email" name="email"> <br />
-
+                <div class="basic-info">
+                    <div class="info-row"><label for="surname">Nazwisko:</label> <input type="text" name="surname" id="surname"/> </div>
+                    <div class="info-row"><label for="age">Wiek:</label><input type="number" name="age" id="age"/></div>
+                    <div class="info-row"><label for="country" >Państwo:</label> <select name="country" id="country">
+                        <option value="pl">Polska</option>
+                        <option value="de">Niemcy</option>
+                        <option value="gb">Wielka Brytania</option>
+                        <option value="fr">Francja</option>
+                    </select></div>
+                    <div class="info-row"><label for="email">Adres e-mail:</label> <input type="email" name="email" id="email"></div>
+                </div>
+                
                 <h4>Zamawiam tutorial z języka:</h4>
-                <input type="checkbox" name="PHP" value="PHP" /> PHP
-                <input type="checkbox" name="C" value="C" /> C/C++
-                <input type="checkbox" name="Java" value="J" /> Java
+                <input type="checkbox" name="PHP" value="PHP" id="PHP" /> <label for="PHP">PHP</label>
+                <input type="checkbox" name="C" value="C" id="C"/> <label for="C">C/C++</label>
+                <input type="checkbox" name="Java" value="J" id="Java"/> <label for="Java">Java</label>
                 
                 <h4>Sposób zapłaty:</h4>
-                <input type="radio" name="payment" value="eu" /> eurocard
-                <input type="radio" name="payment" value="visa" /> visa
-                <input type="radio" name="payment" value="transfer" /> przelew bankowy <br />
+                <input type="radio" name="payment" value="eu" id="eu" /> <label for="eu">eurocard</label>
+                <input type="radio" name="payment" value="visa" id="visa" /> <label for="visa">visa</label>
+                <input type="radio" name="payment" value="transfer" id="transfer" /> <label for="transfer">przelew bankowy</label> <br />
                 <input type="submit" value="Wyślij" />
                 <input type="reset" value="Anuluj" />
             </form>

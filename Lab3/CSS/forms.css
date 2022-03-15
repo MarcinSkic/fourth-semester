@@ -1,0 +1,13 @@
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+}
+.basic-info {
+    width: 300px;
+    margin: 0px 5px;
+}
+
+select {
+    width: 175px;
+}
