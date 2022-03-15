@@ -11,48 +11,53 @@
 </head>
 
 <body>
-    <h2 id="baner">Szybki kurs HTML</h2>
-    <div id="menu"><a href="../index.html">Podstawowe znaczniki</a> <a href="tables.html">Tworzenie tabel</a> <a
-            href="forms.html">Budowa formularzy</a></div>
-    <div id="tresc">
-        <h3>Podstawowe znaczniki formularza HTML to:</h3>
-        <ul>
-            <li>&lt;form&gt; - znacznik podstawowy zawierający pola formularza</li>
-            <li>&lt;input&lt; - znacznik umożliwia wstawienie różnych pól (pole tekstowe, przycisk typu radio, zależności od wartości jego atrybutu type</li>
-            <li>&lt;select&gt; - pole formularza typu lista rozwijana</li>
-            <li>&lt;textarea&gt; - pole formularza typu obszar tekstowy</li>
-            <li>&lt;button&gt; - pole formularza typu przycisk</li>
-        </ul>
-        <div>
-            <h3>Przykładowy formularz HTML:</h3>
-            <form action="mailto:s95565@pollub.pl" method="post">
-                <div class="basic-info">
-                    <div class="info-row"><label for="surname">Nazwisko:</label> <input type="text" name="surname" id="surname"/> </div>
-                    <div class="info-row"><label for="age">Wiek:</label><input type="number" name="age" id="age"/></div>
-                    <div class="info-row"><label for="country" >Państwo:</label> <select name="country" id="country">
-                        <option value="pl">Polska</option>
-                        <option value="de">Niemcy</option>
-                        <option value="gb">Wielka Brytania</option>
-                        <option value="fr">Francja</option>
-                    </select></div>
-                    <div class="info-row"><label for="email">Adres e-mail:</label> <input type="email" name="email" id="email"></div>
-                </div>
-                
-                <h4>Zamawiam tutorial z języka:</h4>
-                <input type="checkbox" name="PHP" value="PHP" id="PHP" /> <label for="PHP">PHP</label>
-                <input type="checkbox" name="C" value="C" id="C"/> <label for="C">C/C++</label>
-                <input type="checkbox" name="Java" value="J" id="Java"/> <label for="Java">Java</label>
-                
-                <h4>Sposób zapłaty:</h4>
-                <input type="radio" name="payment" value="eu" id="eu" /> <label for="eu">eurocard</label>
-                <input type="radio" name="payment" value="visa" id="visa" /> <label for="visa">visa</label>
-                <input type="radio" name="payment" value="transfer" id="transfer" /> <label for="transfer">przelew bankowy</label> <br />
-                <input type="submit" value="Wyślij" />
-                <input type="reset" value="Anuluj" />
-            </form>
+    <div id="kontener">
+        <h2 id="baner">Szybki kurs HTML</h2>
+        <div id="menu">
+            <li><a href="../index.html">Podstawowe znaczniki</a></li>
+            <li><a href="tables.html">Tworzenie tabel</a></li>
+            <li><a href="forms.html">Budowa formularzy</a></li>
         </div>
+        <div id="tresc">
+            <h3>Podstawowe znaczniki formularza HTML to:</h3>
+            <ul>
+                <li>&lt;form&gt; - znacznik podstawowy zawierający pola formularza</li>
+                <li>&lt;input&lt; - znacznik umożliwia wstawienie różnych pól (pole tekstowe, przycisk typu radio, zależności od wartości jego atrybutu type</li>
+                <li>&lt;select&gt; - pole formularza typu lista rozwijana</li>
+                <li>&lt;textarea&gt; - pole formularza typu obszar tekstowy</li>
+                <li>&lt;button&gt; - pole formularza typu przycisk</li>
+            </ul>
+            <div>
+                <h3>Przykładowy formularz HTML:</h3>
+                <form action="mailto:s95565@pollub.pl" method="post">
+                    <div class="basic-info">
+                        <div class="info-row"><label for="surname">Nazwisko:</label> <input type="text" name="surname" id="surname"/> </div>
+                        <div class="info-row"><label for="age">Wiek:</label><input type="number" name="age" id="age"/></div>
+                        <div class="info-row"><label for="country" >Państwo:</label> <select name="country" id="country">
+                            <option value="pl">Polska</option>
+                            <option value="de">Niemcy</option>
+                            <option value="gb">Wielka Brytania</option>
+                            <option value="fr">Francja</option>
+                        </select></div>
+                        <div class="info-row"><label for="email">Adres e-mail:</label> <input type="email" name="email" id="email"></div>
+                    </div>
+                    
+                    <h4>Zamawiam tutorial z języka:</h4>
+                    <input type="checkbox" name="PHP" value="PHP" id="PHP" /> <label for="PHP">PHP</label>
+                    <input type="checkbox" name="C" value="C" id="C"/> <label for="C">C/C++</label>
+                    <input type="checkbox" name="Java" value="J" id="Java"/> <label for="Java">Java</label>
+                    
+                    <h4>Sposób zapłaty:</h4>
+                    <input type="radio" name="payment" value="eu" id="eu" /> <label for="eu">eurocard</label>
+                    <input type="radio" name="payment" value="visa" id="visa" /> <label for="visa">visa</label>
+                    <input type="radio" name="payment" value="transfer" id="transfer" /> <label for="transfer">przelew bankowy</label> <br />
+                    <input type="submit" value="Wyślij" />
+                    <input type="reset" value="Anuluj" />
+                </form>
+            </div>
+        </div>
+        <div id="stopka">&copy;BP</div>
     </div>
-    <div id="stopka">&copy;BP</div>
 </body>
 
 </html>
