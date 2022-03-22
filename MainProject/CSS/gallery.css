@@ -1,0 +1,15 @@
+#photos a {
+    width: auto;
+    height: auto;
+    margin: 5px;
+}
+
+#photos {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+h3 {
+    text-align: center;
+}
