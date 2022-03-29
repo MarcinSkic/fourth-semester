@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <title> Formularz rejestracyjny</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+    <div>
+        <p><a href="../index.html">Strona główna</a></p>
+        <form action="#" method="get">
+            <p>
+                Imię*:<br />
+                <input type="text" name="imie" required="true" placeholder="Jan" pattern="^[A-Z]{1}[a-z]+(?: [A-Z]{1}[a-z]+)?$"><br />
+                Nazwisko*:<br />
+                <input type="text" name="nazwisko" required="true"placeholder="Kowalski" pattern="^[A-Z]{1}[a-z]+(?:-[A-Z]{1}[a-z]+)?$"><br />
+                Data urodzenia:<br />
+                <input type="date" name="data"><br />
+                Telefon*:<br /> 
+                <input type="tel" name="tel" required="true" pattern="^[0-9]{9}$" placeholder="123456789"> <br />
+                Email*:<br />
+                <input type="email" name="email" required="true" placeholder="jkowalski@mail.com"><br />
+                Hasło*:<br />
+                <input type="password" name="haslo" required="true" ><br />
+            </p>
+            <p>
+                Uczeń: <input type="radio" name="kto" value="uczen">
+                Student: <input type="radio" name="kto" value="student">
+                Pracownik: <input type="radio" name="kto" value="pracownik"><br />
+                <br />
+                Zainteresowania:
+                <select name="zainteresowania" multiple size="3">
+                    <option value="sport">Sport</option>
+                    <option value="muzyka">Muzyka</option>
+                    <option value="film">Film</option>
+                    <option value="motoryzacja">Motoryzacja</option>
+                    <option value="taniec">Taniec</option>
+                    <option value="podróże">Podróże</option>
+                </select><br />
+                <input type="checkbox" name="akceptacja" required="true">*Akceptuję regulamin <br />
+                <input type="submit" value="Rejestruj">
+                <input type="reset" value="Wyczyść">
+            </p>
+        </form>
+    </div>
+</body>
+
+</html>
