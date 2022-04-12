@@ -1,0 +1,10 @@
+fieldset {
+    display: flex;
+    gap: 10px;
+}
+
+.radios {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}

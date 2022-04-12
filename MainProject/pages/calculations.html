@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Głowna - Lab1</title>
+
+    <link href="../CSS/style.css" rel="stylesheet" type="text/css">
+    <script src="../JS/functions.js"></script>
+</head>
+
+<body>
+    <div id="kontener">
+        <h2 id="baner">Szybki kurs HTML</h2>
+        <div id="menu">
+            <ul id="nav">
+                <li><a href="../index.html">Podstawy</a></li>
+                <li><a href="tables.html">Tabele</a></li>
+                <li><a href="">Formularze</a>
+                    <ul>
+                        <li><a href="forms.html">Pola formularza</a></li>
+                        <li><a href="calculations.html">Obliczenia w formularzu</a></li>
+                        <li><a href="calculator.html">Kalkulatorek</a></li>
+                    </ul>
+                </li>
+                <li><a href="gallery.html" title="">Galeria</a></li>
+            </ul>
+        </div>
+        <div id="tresc">
+            <h3>Pożyczka</h3>
+            <table>
+                <tbody>
+                    <tr>
+                        <td>Kwota:</td>
+                        <td><input id="moneyTaken"/></td>
+                    </tr>
+                    <tr>
+                        <td>Ile rat:</td>
+                        <td><input id="ratesAmount" /></td>
+                    </tr>
+                    <tr>
+                        <td>Procent:</td>
+                        <td><input id="percentage" /></td>
+                    </tr>
+                    <tr>
+                        <td>Rata miesięczna:</td>
+                        <td><input id="monthlyRate" disabled value=""/></td>
+                    </tr>
+                    <tr>
+                        <td>Kwota z odsetkami:</td>
+                        <td><input id="moneyToReturn" disabled value=""/></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <button id="calculate" style="margin-left: 150px">Oblicz ratę stałą</button>
+            <script>
+                const button = document.querySelector('#calculate');
+                button.addEventListener('click',calculateRate);
+            </script>
+        </div>
+        <div id="pasek">
+            <div class="box">
+                <h3>Walidatory:</h3>
+                <ul>
+                    <li> <a href="https://validator.w3.org/">HTML</a></li>
+                    <li> <a href="http://jigsaw.w3.org/css-validator/">CSS</a></li>
+                </ul>
+            </div>
+            <div class="box">
+                <h3>Kursy:</h3>
+                <ul>
+                    <li> <a href="https://www.w3schools.com/html/"> HTML </a></li>
+                    <li> <a href="https://www.w3schools.com/css/"> CSS </a></li>
+                    <li> <a href="https://www.w3schools.com/js/"> JS </a></li>
+                    <li> <a href="https://www.w3schools.com/php/"> PHP </a></li>
+                </ul>
+            </div>
+        </div>
+        <div id="stopka">&copy;BP</div>
+    </div>
+</body>
+
+</html>
