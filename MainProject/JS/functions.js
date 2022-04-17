@@ -27,7 +27,7 @@ function calculateRate (){
     const rate = (moneyTaken * (percentage/100/12)) / (1-(1/Math.pow((1+(percentage/100/12)),ratesAmount)));
     
     if(isNaN(rate) || !isFinite(rate)){
-        alert("Coś nie pykło");
+        alert("Nie poprawne dane");
         return;
     }
 
