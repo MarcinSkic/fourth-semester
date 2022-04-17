@@ -1,10 +1,13 @@
 fieldset {
     display: flex;
-    gap: 10px;
+    gap: 40px;
 }
 
 .radios {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 5px;
+}
+p {
+    margin: 0;
 }
