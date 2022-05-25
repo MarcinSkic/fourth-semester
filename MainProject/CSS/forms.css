@@ -2,6 +2,7 @@
 .info-row {
     display: flex;
     justify-content: space-between;
+    position: relative;
 }
 .basic-info {
     width: 300px;
@@ -10,4 +11,16 @@
 
 select {
     width: 175px;
+}
+
+.buttons {
+    position: relative;
+}
+
+::after {
+    content: attr(data-error);
+    position: absolute;
+    color: red;
+    left: 320px;
+    min-width: 200px;
 }

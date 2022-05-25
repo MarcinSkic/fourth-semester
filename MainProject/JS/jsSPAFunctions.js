@@ -69,7 +69,7 @@ function pokazPost() {
     return tresc;
 }
 
-function pokazDane() {
+function showDat() {
     //Funkcja zbiera dane wpisane w pola formularza i wyświetla okienko
     //typu confirm do zatwierdzenia przez użytkownika:
     var dane = "Następujące dane zostaną wysłane:\n";

@@ -8,6 +8,7 @@
 
     <link href="../CSS/style.css" rel="stylesheet">
     <link href="../CSS/forms.css" rel="stylesheet">
+    <script src="../JS/validation.js" defer></script>
 </head>
 
 <body>
@@ -38,28 +39,31 @@
             </ul>
             <div>
                 <h3>Przykładowy formularz HTML:</h3>
-                <form action="mailto:s95565@pollub.pl" method="post">
+                <form action="mailto:xxx@xxx.xx" method="post" onsubmit="return validate() && showData()">
                     <div class="basic-info">
-                        <div class="info-row"><label for="surname">Nazwisko:</label> <input type="text" name="surname" id="surname"/> </div>
-                        <div class="info-row"><label for="age">Wiek:</label><input type="number" name="age" id="age"/></div>
+                        <div class="info-row"  id="surname-cont"><label for="surname">Nazwisko:</label> <input type="text" name="surname" id="surname"/> </div>
+                        <div class="info-row" id="age-cont"><label for="age">Wiek:</label><input type="number" name="age" id="age"/></div>
                         <div class="info-row"><label for="country" >Państwo:</label> <select name="country" id="country">
                             <option value="pl">Polska</option>
                             <option value="de">Niemcy</option>
                             <option value="gb">Wielka Brytania</option>
                             <option value="fr">Francja</option>
                         </select></div>
-                        <div class="info-row"><label for="email">Adres e-mail:</label> <input type="email" name="email" id="email"></div>
+                        <div class="info-row" id="email-cont"><label for="email">Adres e-mail:</label> <input type="email" name="email" id="email"></div>
                     </div>
                     
                     <h4>Zamawiam tutorial z języka:</h4>
-                    <input type="checkbox" name="PHP" value="PHP" id="PHP" /> <label for="PHP">PHP</label>
-                    <input type="checkbox" name="C" value="C" id="C"/> <label for="C">C/C++</label>
-                    <input type="checkbox" name="Java" value="J" id="Java"/> <label for="Java">Java</label>
-                    
+                    <div class="buttons" id="service-cont">
+                        <input type="checkbox" name="PHP" value="PHP" id="PHP" /> <label for="PHP">PHP</label>
+                        <input type="checkbox" name="C" value="C" id="C"/> <label for="C">C/C++</label>
+                        <input type="checkbox" name="Java" value="J" id="Java"/> <label for="Java">Java</label>
+                    </div>
                     <h4>Sposób zapłaty:</h4>
-                    <input type="radio" name="payment" value="eu" id="eu" /> <label for="eu">eurocard</label>
-                    <input type="radio" name="payment" value="visa" id="visa" /> <label for="visa">visa</label>
-                    <input type="radio" name="payment" value="transfer" id="transfer" /> <label for="transfer">przelew bankowy</label> <br />
+                    <div class="buttons" id="payment-cont">
+                        <input type="radio" name="payment" value="eu" id="eu" /> <label for="eu">eurocard</label>
+                        <input type="radio" name="payment" value="visa" id="visa" /> <label for="visa">visa</label>
+                        <input type="radio" name="payment" value="transfer" id="transfer" /> <label for="transfer">przelew bankowy</label>
+                    </div>
                     <input type="submit" value="Wyślij" />
                     <input type="reset" value="Anuluj" />
                 </form>
