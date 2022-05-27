@@ -28,7 +28,8 @@ def DigitsIntoWordsImproved(number):
     for i in slowo:
         print(words[i],end=" ")
 
-def NumberIntoRoman(number):
+def NumberIntoRoman():
+    number = int(input("Podaj liczbę: "))
     result = ""
     symbols = {1000:'M',500:'D',100:'C',50:'L',10:'X',5:'V',1:'I'}
     currentNumber = 1000
@@ -44,6 +45,30 @@ def NumberIntoRoman(number):
             currentIndex += 1
             currentNumber = list(symbols)[currentIndex]
     print(result)
-            
 
-NumberIntoRoman(53)
+def NumberIntoRomanImproved():
+    symbols = {1000:'M',500:'D',100:'C',50:'L',10:'X',5:'V',1:'I'}
+
+    number = int(input("Podaj liczbę: "))
+    currentNumber = 1000
+    result = ""
+    for i in range(7):
+        currentNumber = list(symbols)[i]
+        while(number >= currentNumber):
+            if(number >= currentNumber*9/5 and i%2 == 1):
+                result += symbols[list(symbols)[i+1]]
+                result += symbols[list(symbols)[i-1]]
+                number -= currentNumber*9/5
+                break
+
+            result += symbols[currentNumber]
+
+            if(i%2 == 0):
+                if(number >= currentNumber*4):
+                    result += symbols[list(symbols)[i-1]]
+                    number -= currentNumber*4
+                    break
+            number -= currentNumber 
+    print (result)
+
+NumberIntoRomanImproved()
