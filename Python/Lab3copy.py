@@ -12,19 +12,17 @@ class Geopoint:
         return o.lat == self.lat and o.lon == self.lon
 
     def __str__ (self):
-        return f'{{lat: {self.lat}, lon: {self.lon}}}'
+        return f'lat: {self.lat}, lon: {self.lon}'
 
     def __repr__(self):
         return f'{self.name}: {self.lat} {self.lon}'
 
     def __lt__(self,o):
-        return Geopoint.haversine(self.lon,self.lat) < Geopoint.haversine(o.lon,o.lat) 
+        return Geopoint.haversine(self.lon,self.lat,22.52222,51.21167) < Geopoint.haversine(o.lon,o.lat,22.52222,51.21167) 
 
     @staticmethod
-    def haversine(lon1, lat1):
+    def haversine(lon1, lat1,lon2,lat2):
 
-        lat2 = 51.21167
-        lon2 = 22.52222
         # convert decimal degrees to radians
         lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2,
         lat2])
@@ -43,10 +41,6 @@ y = Geopoint('b',51.21353,22.54142)
 z = Geopoint('c',51.21483,22.52527)
 ż = Geopoint('d',51.22352,22.55640)
 ź = Geopoint('comparePoint',51.21167,22.52222)
-
-print(x)
-
-print("Dystans: " + str(Geopoint.haversine(x.lon, x.lat)))
 
 lista = [x,y,z,ż,ź]
 print(lista)
