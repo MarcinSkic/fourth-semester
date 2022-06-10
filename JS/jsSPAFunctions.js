@@ -45,7 +45,7 @@ function pokazPost() {
     //użytkownika zostaną przekazane mailem na wskazany adres, ale najpierw po 
     //zajściu zdarzenia submit (wyślij) –zostanie wywołana funkcja pokazDane()
     tresc = '<h2><br />Dodaj post</h2>';
-    tresc += '<article class="srodek" ><form action="mailto:b.panczyk@pollub.pl" method="post" onsubmit="return pokazDane();">' +
+    tresc += '<article class="srodek" ><form action="mailto:b.panczyk@pollub.pl" method="post" onsubmit="return showData();">' +
         '<label for="email">Twój email:</label><br /> <input type="email" name="email"id="email"required /><br />' +
         '<label for="fullname">Nazwisko i imię:</label><br /> <input type="text" name="fullname" id="fullname" required /><br />'+
         '<label for="tel">Telefon</label> <br/> <input type="tel" name="tel" id="tel" required /> <br />'+
@@ -56,7 +56,7 @@ function pokazPost() {
             '<input type="checkbox" name="other" id="other"><label for="other">Inne</label>'+
             ' <div/>'+
         'Wiek: <br/>'+
-            '<input type="radio" name="age" value="<10" id="<10"><label for="<10">Mniej niż 10</label>'+
+            '<input type="radio" name="age" value="<10" id="<10" required><label for="<10">Mniej niż 10</label>'+
             '<input type="radio" name="age" value="10to20" id="10to20"><label for="10to20">10-20</label>'+
             '<input type="radio" name="age" value="21to30" id="21to30"><label for="21to30">21-30</label>'+
             '<input type="radio" name="age" value="31to40" id="31to40"><label for="31to40">31-40</label>'+
@@ -69,7 +69,7 @@ function pokazPost() {
     return tresc;
 }
 
-function showDat() {
+function showData() {
     //Funkcja zbiera dane wpisane w pola formularza i wyświetla okienko
     //typu confirm do zatwierdzenia przez użytkownika:
     var dane = "Następujące dane zostaną wysłane:\n";

@@ -1,15 +1,20 @@
 const numX = document.querySelector('#x');
 const numY = document.querySelector('#y');
 const result = document.querySelector('#result');
-const operations = document.querySelectorAll('input[name="operation"]');
-
-operations.forEach(radio => radio.addEventListener('change',operationPick))
+const operations = document.querySelectorAll('input[type="radio"]');
+console.log(operations);
 
 function operationPick(event){
+    console.log("huh2");
     if(event.target.checked){
         calculate(event.target.value);
     }
 }
+
+operations.forEach(radio => {
+    console.log(radio);
+    radio.addEventListener('change',()=> console.log("HEJ"));
+});
 
 function calculate(operator){
     let x = +numX.value;
@@ -20,6 +25,8 @@ function calculate(operator){
         result.value = 'To nie są liczby!';
         return;
     }
+
+    console.log("Huh?");
 
     switch(operator){
         case '+':
