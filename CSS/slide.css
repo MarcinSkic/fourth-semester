@@ -1,26 +1,10 @@
-#photos a {
-    width: auto;
-    height: auto;
-    margin: 5px;
-}
-
-#photos {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-h3 {
-    text-align: center;
-}
-
 #slideshow img{
     width:100%;
     height:200px;
-}
+    }
 #slideshow {
     position:relative;
-    height: 200px;
+    height:200px;
 }
 #slideshow img {
     position:absolute;

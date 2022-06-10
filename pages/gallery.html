@@ -7,10 +7,19 @@
 
     <link rel="stylesheet" href="../CSS/style.css">
     <link rel="stylesheet" href="../CSS/gallery.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="../JS/lightbox.js"></script>
+    <link rel="stylesheet" href="../CSS/lightbox.css">
+    <script src="../JS/slide.js"></script>
     <title>Document</title>
 </head>
 <body>
     <div id="kontener">
+        <div id="slideshow">
+            <img src="../img/gallery/full/obraz1.JPG" alt="Piękne Wyspy" class="active" />
+            <img src="../img/gallery/full/obraz2.JPG" alt="Piękne Morze" />
+            <img src="../img/gallery/full/obraz3.JPG" alt="Piękne Góry" />
+        </div>
         <h2 id="baner">Szybki kurs HTML</h2>
         <div id="menu">
             <ul id="nav">
@@ -29,15 +38,15 @@
         <div id="tresc">
             <h3>Galeria Zdjęć</h3>
             <div id="photos">
-                <a href="../img/gallery/full/obraz1.JPG" target="_blank"><img src="../img/gallery/mini/obraz1.JPG"></a>
-                <a href="../img/gallery/full/obraz2.JPG" target="_blank"><img src="../img/gallery/mini/obraz2.JPG"></a>
-                <a href="../img/gallery/full/obraz3.JPG" target="_blank"><img src="../img/gallery/mini/obraz3.JPG"></a>
-                <a href="../img/gallery/full/obraz4.JPG" target="_blank"><img src="../img/gallery/mini/obraz4.JPG"></a>
-                <a href="../img/gallery/full/obraz5.JPG" target="_blank"><img src="../img/gallery/mini/obraz5.JPG"></a>
-                <a href="../img/gallery/full/obraz6.JPG" target="_blank"><img src="../img/gallery/mini/obraz6.JPG"></a>
-                <a href="../img/gallery/full/obraz7.JPG" target="_blank"><img src="../img/gallery/mini/obraz7.JPG"></a>
-                <a href="../img/gallery/full/obraz8.JPG" target="_blank"><img src="../img/gallery/mini/obraz8.JPG"></a>
-                <a href="../img/gallery/full/obraz9.JPG" target="_blank"><img src="../img/gallery/mini/obraz9.JPG"></a>
+                <a href="../img/gallery/full/obraz1.JPG" data-lightbox="galeria" target="_blank"><img src="../img/gallery/mini/obraz1.JPG"></a>
+                <a href="../img/gallery/full/obraz2.JPG" data-lightbox="galeria" target="_blank"><img src="../img/gallery/mini/obraz2.JPG"></a>
+                <a href="../img/gallery/full/obraz3.JPG" data-lightbox="galeria" target="_blank"><img src="../img/gallery/mini/obraz3.JPG"></a>
+                <a href="../img/gallery/full/obraz4.JPG" data-lightbox="galeria" target="_blank"><img src="../img/gallery/mini/obraz4.JPG"></a>
+                <a href="../img/gallery/full/obraz5.JPG" data-lightbox="galeria" target="_blank"><img src="../img/gallery/mini/obraz5.JPG"></a>
+                <a href="../img/gallery/full/obraz6.JPG" data-lightbox="galeria" target="_blank"><img src="../img/gallery/mini/obraz6.JPG"></a>
+                <a href="../img/gallery/full/obraz7.JPG" data-lightbox="galeria" target="_blank"><img src="../img/gallery/mini/obraz7.JPG"></a>
+                <a href="../img/gallery/full/obraz8.JPG" data-lightbox="galeria" target="_blank"><img src="../img/gallery/mini/obraz8.JPG"></a>
+                <a href="../img/gallery/full/obraz9.JPG" data-lightbox="galeria" target="_blank"><img src="../img/gallery/mini/obraz9.JPG"></a>
             </div>
         </div>
         <div id="pasek">

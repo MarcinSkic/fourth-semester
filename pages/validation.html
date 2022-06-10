@@ -5,18 +5,19 @@
     <title> Formularz rejestracyjny</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="../JS/validation.js"></script>
     <script src="../JS/returnToMenu.js" defer></script>
 </head>
 
 <body>
     <div>
         <p><a href="../index.html">Strona główna</a></p>
-        <form action="#" method="get">
+        <form action="#" method="get" onsubmit="return validate() & showData()">
             <p>
                 Imię*:<br />
-                <input type="text" name="imie" required="true" placeholder="Jan" pattern="^[A-Z]{1}[a-z]+(?: [A-Z]{1}[a-z]+)?$"><br />
+                <input type="text" name="imie" required placeholder="Jan" pattern="^[A-Z]{1}[a-z]+(?: [A-Z]{1}[a-z]+)?$"><br />
                 Nazwisko*:<br />
-                <input type="text" name="nazwisko" required="true"placeholder="Kowalski" pattern="^[A-Z]{1}[a-z]+(?:-[A-Z]{1}[a-z]+)?$"><br />
+                <input type="text" name="nazwisko" required placeholder="Kowalski" pattern="^[A-Z]{1}[a-z]+(?:-[A-Z]{1}[a-z]+)?$"><br />
                 Data urodzenia:<br />
                 <input type="date" name="data"><br />
                 Telefon*:<br /> 
