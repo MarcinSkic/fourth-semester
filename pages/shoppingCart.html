@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shopping Cart</title>
+    <title>Shopping Cart</title>    
     <style>
-        td:first-child {
-            background-color: rgb(171, 207, 216);
+        td:first-child {/*Wybór pierwszej kolumny w rzędzie*/
+            background-color: rgb(171, 207, 216);   
         }
 
-        thead > tr > th {
+        thead > tr > th {/*Wybór wszystkich komórek głów*/
             background-color: rgb(175, 174, 174);
         }
 
@@ -56,11 +56,12 @@
         </div>
         
     </form>
-    <div id="cart">
+    <div id="cart"></div>
     <script>
-        let i = 0;
-        let editedItemId = 0;
-        let nameInput = document.querySelector('#name');
+        let i = 0;  
+        let editedItemId = 0;   //Zmienna przechowująca aktualnie edytowany przedmiot
+        //Polecenia wybierające elementy z DOM
+        let nameInput = document.querySelector('#name');    
         let priceInput = document.querySelector('#price');
         let colorInput = document.querySelector('#color');
         let amountInput = document.querySelector('#amount');
@@ -69,42 +70,45 @@
         let mainButtons = document.querySelector('.buttons');
         let editButton = document.querySelector('.edit-button');
 
+        //Polecenia wybierające i od razu przypisujące eventy do guzików
         document.querySelector('#save').addEventListener('click',saveItem);
         document.querySelector('#show').addEventListener('click',showAllItems);
         document.querySelector('#delete').addEventListener('click',deleteItems);
         
 
-        function generateItem(item,id){
-            return '<tr>'+
-                `<td>${item.name}</td>`+
+        function generateItem(item,id){ //Funkcja tworząca przedmiot w tabeli
+            return '<tr>'+  //Rząd
+                `<td>${item.name}</td>`+    //Komórki z wartościami zmiennych
                 `<td>${item.price}</td>`+
-                `<td style='background-color: ${item.color};'>${item.color}</td>`+
+                `<td style='background-color: ${item.color};'>${item.color}</td>`+  //Komórka z kolorem produktu w tle
                 `<td>${item.amount}</td>`+
-                `<th><button class='edit' onclick=editItem("${id}")>Edytuj</button></th>`+
-                `<th><button class='delete' onclick=deleteItem("${id}")>Usuń</button></th>`+
+                `<td><button class='edit' onclick=editItem("${id}")>Edytuj</button></td>`+  //Komórka z przyciskiem edycji który ma przypisany event z argumentem id tego rekordu w liście
+                `<td><button class='delete' onclick=deleteItem("${id}")>Usuń</button></td>`+    //Komórka z przyciskiem usuwania który ma przypisany event z argumentem id tego rekordu w liście
             '</tr>';
         }
 
-        function editItem(id){
-            let list = getItems();
-            mainButtons.classList.toggle('invisible');
+        function editItem(id){  //Funkcja edytująca dany produkt
+            let list = getItems();  //Pobiera aktualną listę
+            //Wyłącza pozostałe przyciski i zostawia tylko przycik akceptacji edycji
+            mainButtons.classList.toggle('invisible');  
             editButton.classList.toggle('invisible');
 
-            editedItemId = id;
-            item = list[id];
+            editedItemId = id;  //Zapisuje id edytowanego przedmiotu
+            item = list[id];    //Pobiera przedmiot z listy
+            //Wpisuje wartości przedmiotu do pól edycji użytkownika
             nameInput.value = item.name;
             priceInput.value = item.price;
             colorInput.value = item.color;
             amountInput.value = item.amount;
-            editButton.addEventListener('click',saveEdition);
+            editButton.addEventListener('click',saveEdition);   //Dodaje event do guzika zatwierdzającego edycję
         }
 
-        function saveEdition(){
-            let list = getItems();
-            mainButtons.classList.toggle('invisible');
-            editButton.classList.toggle('invisible');
+        function saveEdition(){ //Funkcja zatwierdzająca edycję produktu
+            let list = getItems();  //Pobranie aktualnej listy
+
             id = editedItemId;
 
+            //Ponowne stworzenie obiektu przedmiotu z wprowadzonych wartości
             let item = {
                 name: nameInput.value,
                 price: priceInput.value,
@@ -112,22 +116,31 @@
                 amount: amountInput.value
             };
 
-            list[id] = item;
+            list[id] = item;    //Zapisanie przedmiotu pod tym samym id co zastępuje poprzedni przedmiot
 
-            editButton.removeEventListener('click',saveEdition);
+           
+            editButton.removeEventListener('click',saveEdition);    //Usunięcie eventu, dla bezpieczeństwa
+            //Wyłącza przycisk akceptacji edycji i przywraca zwykłe przyciski
+            mainButtons.classList.toggle('invisible');
+            editButton.classList.toggle('invisible');
+
+            //Kod sam się tłumaczy
+            updateList(list);  
+            showAllItems();
+        }
+
+        
+        function deleteItem(id){    //Kod sam się tłumaczy
+            let list = getItems();  //Pobranie aktualnej listy
+            list.splice(id,1);  //Usuń element pod tym id
+
+            //Kod sam się tłumaczy
             updateList(list);
             showAllItems();
         }
 
-        function deleteItem(id){
-            let list = getItems();
-            list.splice(id,1);
-            updateList(list);
-            showAllItems();
-        }
-
-        function showItems(list,message){
-            if(list === null){
+        function showItems(list,message){   //Funkcja wyświetlająca podaną w argumencie listę jako tabelę produktów
+            if(list === null){  //Jeżeli lista pusta to wyświetl komunikat i zakończ
                 productsTable.innerHTML = `<p>${message}</p>`
                 return;
             }
@@ -135,10 +148,10 @@
             let tableContents = "";
 
             for(let i = 0; i < list.length;i++){
-                tableContents += generateItem(list[i],i);
+                tableContents += generateItem(list[i],i);   //Do zmiennej dopisz kolejne produkty z listy
             }
 
-            productsTable.innerHTML = "<table>" +
+            productsTable.innerHTML = "<table>" +   //HTMLowa reprezentacja tabeli
                 "<thead>" +
                     "<tr>"+
                         "<th>Nazwa</th>"+
@@ -148,51 +161,52 @@
                     "</tr>"+
                 "</thead>"+
                 "<tbody>" +
-                    `${tableContents}`+
+                    `${tableContents}`+ //Z dołączonymi produktami
                 "</tbody>"+
             "</table>";
         }
 
-        function showAllItems(event){
-            let list = getItems();
+        function showAllItems(event){   //Wyświetl wszystkie elementy
+            let list = getItems();  //Pobierz aktualną listę
 
-            showItems(list,'Brak produktów w koszyku');
+            showItems(list,'Brak produktów w koszyku'); //I ją wyświetl
         }
 
-        function getItems(){
+        function getItems(){    //Metoda pobierająca stringa z localStorage który jest konwertowany na listę produktów i zwracany
             return JSON.parse(localStorage.getItem('productsList'));
         }
 
-        function saveItem(event){
-            if(nameInput.value && priceInput.value && colorInput.value && amountInput.value){
-                let list = JSON.parse(localStorage.getItem('productsList'));
+        function saveItem(event){   //Metoda zapisująca produkt do listy
+            if(nameInput.value && priceInput.value && colorInput.value && amountInput.value){   //Jeżeli wszystkie pola są wypełnione
+                let list = getItems();    //Pobierz aktualną listę
 
-                if(list === null) {
+                if(list === null) { //Jeżeli lista pusta to ją stwórz
                     list = [];
                 }
 
-                let item = {
+                let item = {    //Stwórz obiekt produktu
                     name: nameInput.value,
                     price: priceInput.value,
                     color: colorInput.value,
                     amount: amountInput.value
                 };
 
-                list.push(item);
-                updateList(list);
+                list.push(item);    //Dodaj produkt do listy
+                updateList(list);   //Zaktualizuj listę
+                showAllItems(); //Pokaż koszyk
             }
         }
 
-        function updateList(list){
+        function updateList(list){  //Metoda konwertująca listę do stringa w formie JSON i przesyłająca go do localStorage
             localStorage.setItem('productsList',JSON.stringify(list));
         }
 
-        function deleteItems(event) {
+        function deleteItems(event) {   //Metoda czyszcząca localStorage z listy produktów
             productsTable.innerHTML = "";
             localStorage.clear();
         }
 
-        showAllItems();
+        showAllItems(); //Wyświetlanie aktualnego koszyka na start strony
     </script>
 </body>
 </html>
