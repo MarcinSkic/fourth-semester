@@ -13,6 +13,18 @@
         thead > tr > th {
             background-color: rgb(175, 174, 174);
         }
+
+        .invisible {
+            display: none;
+        }
+
+        .edit {
+            background-color: aquamarine;
+        }
+
+        .delete {
+            background-color: red;
+        }
     </style>
 </head>
 <body>
@@ -39,58 +51,91 @@
             <button type="button" id="show">Wyświetl koszyk</button>
             <button type="button" id="delete">Usuń wszystkie produkty</button>
         </div>
-        <div id="cart">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Lol</th>
-                        <th>Lol</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Lol2333</td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="edit-button invisible">
+            <button type="button" id="edit">Zapisz edycję</button>
         </div>
+        
     </form>
+    <div id="cart">
     <script>
         let i = 0;
+        let editedItemId = 0;
         let nameInput = document.querySelector('#name');
         let priceInput = document.querySelector('#price');
         let colorInput = document.querySelector('#color');
         let amountInput = document.querySelector('#amount');
 
         let productsTable = document.querySelector('#cart');
+        let mainButtons = document.querySelector('.buttons');
+        let editButton = document.querySelector('.edit-button');
 
         document.querySelector('#save').addEventListener('click',saveItem);
-        document.querySelector('#show').addEventListener('click',getItems);
+        document.querySelector('#show').addEventListener('click',showAllItems);
         document.querySelector('#delete').addEventListener('click',deleteItems);
+        
 
-        function generateItem(value){
-            let item = JSON.parse(value);
+        function generateItem(item,id){
             return '<tr>'+
                 `<td>${item.name}</td>`+
                 `<td>${item.price}</td>`+
                 `<td style='background-color: ${item.color};'>${item.color}</td>`+
                 `<td>${item.amount}</td>`+
+                `<th><button class='edit' onclick=editItem("${id}")>Edytuj</button></th>`+
+                `<th><button class='delete' onclick=deleteItem("${id}")>Usuń</button></th>`+
             '</tr>';
         }
 
-        function getItems(event){
-            if(localStorage.length === 0){
-                productsTable.innerHTML = "<p>Brak produktów w koszyku</p>"
+        function editItem(id){
+            let list = getItems();
+            mainButtons.classList.toggle('invisible');
+            editButton.classList.toggle('invisible');
+
+            editedItemId = id;
+            item = list[id];
+            nameInput.value = item.name;
+            priceInput.value = item.price;
+            colorInput.value = item.color;
+            amountInput.value = item.amount;
+            editButton.addEventListener('click',saveEdition);
+        }
+
+        function saveEdition(){
+            let list = getItems();
+            mainButtons.classList.toggle('invisible');
+            editButton.classList.toggle('invisible');
+            id = editedItemId;
+
+            let item = {
+                name: nameInput.value,
+                price: priceInput.value,
+                color: colorInput.value,
+                amount: amountInput.value
+            };
+
+            list[id] = item;
+
+            editButton.removeEventListener('click',saveEdition);
+            updateList(list);
+            showAllItems();
+        }
+
+        function deleteItem(id){
+            let list = getItems();
+            list.splice(id,1);
+            updateList(list);
+            showAllItems();
+        }
+
+        function showItems(list,message){
+            if(list === null){
+                productsTable.innerHTML = `<p>${message}</p>`
                 return;
             }
 
             let tableContents = "";
 
-            for(let i = 0; i < localStorage.length; i++){
-                console.log(productsTable.innerHTML);
-                let key = localStorage.key(i);
-                let value = localStorage.getItem(key);
-                tableContents += generateItem(value);
+            for(let i = 0; i < list.length;i++){
+                tableContents += generateItem(list[i],i);
             }
 
             productsTable.innerHTML = "<table>" +
@@ -108,22 +153,46 @@
             "</table>";
         }
 
+        function showAllItems(event){
+            let list = getItems();
+
+            showItems(list,'Brak produktów w koszyku');
+        }
+
+        function getItems(){
+            return JSON.parse(localStorage.getItem('productsList'));
+        }
+
         function saveItem(event){
             if(nameInput.value && priceInput.value && colorInput.value && amountInput.value){
+                let list = JSON.parse(localStorage.getItem('productsList'));
+
+                if(list === null) {
+                    list = [];
+                }
+
                 let item = {
                     name: nameInput.value,
                     price: priceInput.value,
                     color: colorInput.value,
                     amount: amountInput.value
                 };
-                localStorage.setItem('item',JSON.stringify(item));
+
+                list.push(item);
+                updateList(list);
             }
+        }
+
+        function updateList(list){
+            localStorage.setItem('productsList',JSON.stringify(list));
         }
 
         function deleteItems(event) {
             productsTable.innerHTML = "";
             localStorage.clear();
         }
+
+        showAllItems();
     </script>
 </body>
 </html>
