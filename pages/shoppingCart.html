@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <style>
+        td:first-child {
+            background-color: rgb(171, 207, 216);
+        }
+
+        thead > tr > th {
+            background-color: rgb(175, 174, 174);
+        }
+    </style>
+</head>
+<body>
+    <h1>Koszyk zakupowy</h1>
+    <form action="#" method="get">
+        <div>
+            <label for="name">Nazwa: </label> 
+            <input type="text" id="name" name="product-name">
+        </div>
+        <div>
+            <label for="price">Cena: </label> 
+            <input type="number" id="price" name="product-price"> zł
+        </div>
+        <div>
+            <label for="color">Kolor: </label> 
+            <input type="color" id="color" name="product-color">
+        </div>
+        <div>
+            <label for="amount">Ilość: </label> 
+            <input type="number" id="amount" name="product-amount">
+        </div>
+        <div class="buttons">
+            <button type="button" id="save">Zapisz produkt do koszyka</button>
+            <button type="button" id="show">Wyświetl koszyk</button>
+            <button type="button" id="delete">Usuń wszystkie produkty</button>
+        </div>
+        <div id="cart">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Lol</th>
+                        <th>Lol</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Lol2333</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </form>
+    <script>
+        let i = 0;
+        let nameInput = document.querySelector('#name');
+        let priceInput = document.querySelector('#price');
+        let colorInput = document.querySelector('#color');
+        let amountInput = document.querySelector('#amount');
+
+        let productsTable = document.querySelector('#cart');
+
+        document.querySelector('#save').addEventListener('click',saveItem);
+        document.querySelector('#show').addEventListener('click',getItems);
+        document.querySelector('#delete').addEventListener('click',deleteItems);
+
+        function generateItem(value){
+            let item = JSON.parse(value);
+            return '<tr>'+
+                `<td>${item.name}</td>`+
+                `<td>${item.price}</td>`+
+                `<td style='background-color: ${item.color};'>${item.color}</td>`+
+                `<td>${item.amount}</td>`+
+            '</tr>';
+        }
+
+        function getItems(event){
+            if(localStorage.length === 0){
+                productsTable.innerHTML = "<p>Brak produktów w koszyku</p>"
+                return;
+            }
+
+            let tableContents = "";
+
+            for(let i = 0; i < localStorage.length; i++){
+                console.log(productsTable.innerHTML);
+                let key = localStorage.key(i);
+                let value = localStorage.getItem(key);
+                tableContents += generateItem(value);
+            }
+
+            productsTable.innerHTML = "<table>" +
+                "<thead>" +
+                    "<tr>"+
+                        "<th>Nazwa</th>"+
+                        "<th>Cena</th>"+
+                        "<th>Kolor</th>"+
+                        "<th>Ilość</th>"+
+                    "</tr>"+
+                "</thead>"+
+                "<tbody>" +
+                    `${tableContents}`+
+                "</tbody>"+
+            "</table>";
+        }
+
+        function saveItem(event){
+            if(nameInput.value && priceInput.value && colorInput.value && amountInput.value){
+                let item = {
+                    name: nameInput.value,
+                    price: priceInput.value,
+                    color: colorInput.value,
+                    amount: amountInput.value
+                };
+                localStorage.setItem('item',JSON.stringify(item));
+            }
+        }
+
+        function deleteItems(event) {
+            productsTable.innerHTML = "";
+            localStorage.clear();
+        }
+    </script>
+</body>
+</html>
