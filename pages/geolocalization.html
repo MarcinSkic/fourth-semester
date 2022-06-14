@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Geolokalizacja</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        function showLocation(position) {
+            var latitude = position.coords.latitude;
+            var longitude = position.coords.longitude;
+            var output = document.getElementById("geo");
+            output.innerHTML = "<p>Szerokość geograficzna: " + latitude +
+                "</p>";
+            output.innerHTML += "<p>Wysokość geograficzna: " + longitude +
+                "</p>";
+        }
+        function errorHandler(error) {
+            var output = document.getElementById("geo");
+            switch (error.code) {
+                case error.PERMISSION_DENIED:
+                    output.innerHTML = "Użytkownik nie udostępnił danych.";
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    output.innerHTML = "Dane lokalizacyjne niedostępne.";
+                    break;
+                case error.TIMEOUT:
+                    output.innerHTML = "Przekroczono czas żądania.";
+                    break;
+                case error.UNKNOWN_ERROR:
+                    output.innerHTML = "Wystąpił nieznany błąd.";
+                    break;
+            }
+        }
+        function getLocation() {
+            if (navigator.geolocation) {
+                var options = { timeout: 60000 };
+                navigator.geolocation.getCurrentPosition(
+                    showLocation,
+                    errorHandler,
+                    options);
+            } else { alert("Twoja przeglądarka nie wspiera geolokalizacji!"); }
+        }
+    </script>
+    <script src="https://maps.google.com/maps/api/js?sensor=false" defer>
+    </script>
+    <script defer>
+        var wspolrzedne = new google.maps.LatLng(53.419,14.581);
+        var opcjeMapy = {
+        zoom: 10,
+        center: wspolrzedne,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        var mapa = new
+        google.maps.Map(document.getElementById("mapka"),
+        opcjeMapy);
+    </script>
+</head>
+
+<body>
+    <h1>Geolokalizacja</h1>
+    <div id="geo"></div>
+    <p><button onclick="getLocation()">Pokaż moją lokalizację</button></p>
+    <div id="mapka" style="width:350px; height:250px;">
+        <!-- tu będzie mapa -->
+       </div>
+</body>
+
+</html>

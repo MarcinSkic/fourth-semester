@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Formularz rejestracji</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        class User {
+            constructor(email = "", login = "user", pass = "user") {
+                this.login = login;
+                this.pass = pass;
+                this.email = email;
+            }
+
+            show() {
+                return `Dane użytkownika: login: ${this.login}, pass: ${this.pass}, email: ${this.email}`;
+            }
+
+            createRegisterForm(){
+                return '<div><label for="email">Email: </label><input type="email" id="email"></div>'+
+                '<div><label for="login">Login: </label><input type="text" id="login"></div>'+
+                '<div><label for="pass">Hasło: </label><input type="password" id="pass"></div>'+
+                '<button id="register">Zarejestruj</button>'
+            }
+
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            var user = new User("marcinskic@mail.com","Martin","Haselko");
+            
+            let info = document.getElementById('info');
+            let form = document.getElementById('form');
+            
+            info.innerHTML += user.show();
+            form.innerHTML += user.createRegisterForm();
+
+            let registerButton = document.getElementById('register');
+
+            registerButton.addEventListener('click',(event) => {
+                user.login = document.getElementById('login').value;
+                if(localStorage.getItem(user.login)){
+                    alert("Istnieje już użytkownik o takim loginie!")
+                    return;
+                }
+
+                user.email = document.getElementById('email').value;
+
+                for(let i = 0; i < localStorage.length;i++){
+                    let key = localStorage.key(i);
+                    let compareUser = JSON.parse(localStorage.getItem(key));
+                    
+                    if(compareUser.email === user.email){
+                        alert("Istnieje już użytkownik o takim email!")
+                        return;
+                    }
+                }
+
+                user.pass = document.getElementById('pass').value;
+
+                
+
+                localStorage.setItem(user.login,JSON.stringify(user));
+            })
+        });
+
+    </script>
+</head>
+
+<body>
+    <div>
+        <h2>Rejestracja nowego użytkownika w localStorage</h2>
+        <div id='form'></div>
+        <div id='info'></div>
+    </div>
+</body>
+
+</html>
