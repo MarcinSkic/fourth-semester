@@ -1,0 +1,16 @@
+.template {
+    display: flex;
+    gap: 5px;
+}
+
+.fields-list {
+    margin: 10px 0 10px;   
+
+    display: flex;
+    flex-direction: column;
+}
+
+.add-new-field {
+    display: flex;
+    gap: 5px;
+}

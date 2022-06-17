@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/normalize.css">
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/templatesList.css">
+    <script src="../js/templatesList.js" defer></script>
+    <title>Create workout template</title>
+</head>
+<body>
+    <dialog class="create-template">
+        <form method="dialog">
+            <h2>Create workout template</h2>
+            <label for="place">Place: </label>
+            <input type="text" name="place" id="place" list="places" placeholder="Optional">
+            <datalist id="places">
+                <option value="Gym">Gym</option>
+            </datalist>
+            <div class="fields-list">
+                <div class="add-new-field">
+                    <input type="text" name="field-name" placeholder="Field Name">
+                    <div class="field-options">
+                        <select name="field-type" id="">
+                            <option value="sets-and-reps" title="Example: plank">Sets and Reps</option>
+                            <option value="sets-and-reps-with-weight" title="Example: Bench pressing">Sets and Reps with Weight</option>
+                            <option value="checkbox" title="Example: Eaten before">Checkbox</option>
+                        </select>
+                        <button type="button" class="add-field-button">+</button>
+                    </div>
+                </div>
+            </div>
+            <button type="submit">Create template</button>
+        </form>
+    </dialog>
+    <header>
+        <a href="../index.html"><img src="" alt="site-logo"></a>
+        <nav>
+            <ul>
+                <li><a href="templatesList.html">Workout templates</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <button class="add-template">Create new template</button>
+        <div class="templates-container">
+            <div class="template"><span class="trening-name">Outdoors</span><button class="log-trening">Log this trening</button></div>
+        </div>
+    </main>
+    <footer><a href="https://github.com/MarcinSkic">Marcin Skic &copy; <img src="../assets/img/GitHub-Mark-Light-32px.png" alt="GitHub-Mark" style="width: 16px;"></a></footer>
+</body>
+</html>
