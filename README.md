@@ -13,3 +13,12 @@
 1. Zakomentowana "każda" linijka kodu
 2. Należy dołączyć sprawozdanie w formacie .docx, które opisuje ogólne działanie strony
 3. W sprawozdaniu wymagane są rozdziały o innowacyjności projektu, co podobało się autorowi, na jakie trudności natrafiono i jak je pokonano
+
+## MVP (Minimum Viable Product)
+- Możliwość tworzenia i zapisywania ustandaryzowanych wzorów sesji treningowych (templates)
+- Możliwość wypełniania tych sesji wraz z datą i zapisywania ich odbycia (workout)
+- Możliwość przeglądania, edycji i usuwania wzorów oraz odbytych sesji
+- Strona na której jest możliwość wyszukania ćwiczenia po nazwie i zobaczenia filmiku ze sposobem wykonania. Zasoby będą pobierane z użyciem API.
+
+## Extra content
+- Strona z raportami na której można ustawić filtry w celu sprawdzenia postępów
