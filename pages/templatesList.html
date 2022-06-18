@@ -11,37 +11,7 @@
     <title>Create workout template</title>
 </head>
 <body>
-    <dialog class="create-template-dialog">
-        <form method="dialog">
-            <h2>Create workout template</h2>
-            <label for="place">Place: </label>
-            <input type="text" name="place" id="place" list="places" placeholder="Optional">
-            <datalist id="places">
-                <option value="Gym">Gym</option>
-            </datalist>
-            <div class="fields-list">
-                <div class="template-field">
-                    <span class="field-name">Plank</span>
-                    <label for="sets-plank">Sets</label>
-                    <input type="number" name="sets-plank" id="sets-plank" disabled>
-                    <label for="reps-plank">Reps</label>
-                    <input type="number" name="reps-plank" id="reps-plank" disabled>
-                </div>
-                
-                <div class="add-new-field">
-                    <input type="text" name="field-name" placeholder="Field Name">
-                    <div class="field-options">
-                        <select name="field-type" id="">
-                            <option value="sets-and-reps" title="Example: plank">Sets and Reps</option>
-                            <option value="sets-and-reps-with-weight" title="Example: Bench pressing">Sets and Reps with Weight</option>
-                            <option value="checkbox" title="Example: Eaten before">Checkbox</option>
-                        </select>
-                        <button type="button" class="add-field-button">+</button>
-                    </div>
-                </div>
-            </div>
-            <button type="submit">Create template</button>
-        </form>
+    <dialog>
     </dialog>
     <header>
         <a href="../index.html"><img src="" alt="site-logo"></a>
