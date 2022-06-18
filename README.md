@@ -14,11 +14,24 @@
 2. Należy dołączyć sprawozdanie w formacie .docx, które opisuje ogólne działanie strony
 3. W sprawozdaniu wymagane są rozdziały o innowacyjności projektu, co podobało się autorowi, na jakie trudności natrafiono i jak je pokonano
 
-## MVP (Minimum Viable Product)
-- Możliwość tworzenia i zapisywania ustandaryzowanych wzorów sesji treningowych (templates)
-- Możliwość wypełniania tych sesji wraz z datą i zapisywania ich odbycia (workout)
-- Możliwość przeglądania, edycji i usuwania wzorów oraz odbytych sesji
-- Strona na której jest możliwość wyszukania ćwiczenia po nazwie i zobaczenia filmiku ze sposobem wykonania. Zasoby będą pobierane z użyciem API.
+## Zrealizowana zawartość
 
-## Extra content
-- Strona z raportami na której można ustawić filtry w celu sprawdzenia postępów
+## Planowana zawartość
+### MVP (Minimum Viable Product)
+1. Możliwość tworzenia i zapisywania ustandaryzowanych wzorów sesji treningowych (templates)
+2. Możliwość wypełniania tych sesji wraz z datą i zapisywania ich odbycia (workout)
+3. Możliwość przeglądania, edycji i usuwania wzorów oraz odbytych sesji
+4. Strona na której jest możliwość wyszukania ćwiczenia po nazwie i zobaczenia filmiku ze sposobem wykonania. Zasoby będą pobierane z użyciem API.
+
+### Dodatkowa
+1. Strona z raportami na której można ustawić filtry w celu sprawdzenia postępów
+
+## Legenda określeń
+### Rzeczowniki
+- Container: HTMLowy element przechowujący listę elementów, zazwyczaj w postaci diva z flexboxem lub gridem
+### Czasowniki
+- Generate: Stworzyć reprezentację danych w HTML, zazwyczaj widoczną dla użytkownika
+- Create: Stworzyć zapis danych w kodzie, przed stworzeniem wersji wizualnej
+
+## Postęp prac
+[Projekt w ClickUp](https://sharing.clickup.com/4587389/b/h/6-198436627-2/2f6652c2297d8fd)

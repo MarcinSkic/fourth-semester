@@ -23,4 +23,14 @@
 
 .template-field .field-name {
     font-weight: 700;
+    flex: 1;
+}
+
+.number-part {
+    display: flex;
+    gap: 10px;
+}
+
+.number-part [type="number"]{
+    width: 3rem;
 }

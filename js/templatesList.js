@@ -6,7 +6,7 @@ let fieldsContainer = document.querySelector(".fields-list");
 
 addTemplateButton.addEventListener('click',openTemplateCreation);
 createTemplateDialog.addEventListener('cancel',onTemplateCreationCancel);
-addTemplateField.addEventListener('click',tryAddingTemplateField);
+addTemplateField.addEventListener('click',tryCreatingTemplateField);
 
 class WorkoutTemplate{
     constructor(name,place){
@@ -19,7 +19,7 @@ class WorkoutTemplate{
         this.fields.push(new WorkoutField(name,type));
     }
 
-    generateHTMLTemplate(){
+    generateWorkoutTemplate(){
 
     }
 }
@@ -30,21 +30,22 @@ class WorkoutField{
         this.type = type;
     }
 
-    generateHTMLField(newField){    
+    generateWorkoutField(){
+        let newField = document.createElement('div');
+        newField.classList.add("template-field");
+
         let span = document.createElement('span');
         span.classList.add('field-name');
         span.textContent = this.name; //Zabezpieczenie przed HTML injection
+
         newField.appendChild(span);
 
         let result = "";
         if(this.type.includes("sets-and-reps")){
-            result += `<label for="sets-${this.name}">Sets</label>` +   //Moze zamienic na metodę która będzie dodawać?
-            `<input type="number" name="sets-${this.name}" id="sets-${this.name}" disabled>` +
-            `<label for="reps-${this.name}">Reps</label>` +
-            `<input type="number" name="reps-${this.name}" id="reps-${this.name}" disabled>`;
+            newField.appendChild(generateNumberPart('sets',this.name));
+            newField.appendChild(generateNumberPart('reps',this.name));
             if(this.type === "sets-and-reps-with-weight"){
-                result += `<label for="weights-${this.name}">Weights</label>` +
-                `<input type="number" name="sets-${this.name}" id="sets-${this.name}" disabled>`;
+                newField.appendChild(generateNumberPart('weight',this.name));
             }
         }
         
@@ -53,18 +54,39 @@ class WorkoutField{
         }
 
         newField.innerHTML += result;
+
+        fieldsContainer.insertBefore(newField,addNewField);
     }
 }
 
-let currentEditedTemplate;
+function generateNumberPart(category,name){
+    let label = document.createElement('label');
+    let input = document.createElement('input');
+
+    label.setAttribute('for',`${category}-${name}`);
+    label.textContent = capitalizeFirstLetter(category);
+    
+    input.setAttribute('type','number');
+    input.setAttribute('name',`${category}-${name}`);
+    input.setAttribute('id',`${category}-${name}`)
+    input.disabled = true;
+
+    let container = document.createElement('div');
+    container.classList.add('number-part');
+    container.append(label,input);
+    return container;
+}
+
+function capitalizeFirstLetter(string){
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
 
 function openTemplateCreation(event){
     //Create page loading if data-id for this template shows something aka for edition
     createTemplateDialog.showModal();
-    currentEditedTemplate = "";
 }
 
-function tryAddingTemplateField(){
+function tryCreatingTemplateField(){
     let fieldName = document.querySelector("[name='field-name']").value;
     let fieldType = document.querySelector("[name='field-type']").value;
 
@@ -74,13 +96,8 @@ function tryAddingTemplateField(){
     }
 
     newWorkoutField = new WorkoutField(fieldName,fieldType);
+    newWorkoutField.generateWorkoutField();
 
-    let newField = document.createElement('div');
-    newField.classList.add("template-field");
-    
-    newWorkoutField.generateHTMLField(newField);
-
-    fieldsContainer.insertBefore(newField,addNewField);
 }
 
 function onTemplateCreationCancel(event){
