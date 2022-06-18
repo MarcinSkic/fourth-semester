@@ -11,3 +11,8 @@ tworzenia vs wypełniania treningów
 
 ## Fetch API:
 Można użyć Exercise DB do stworzenia podstrony z propozycjami treningów
+
+## Template i Field
+Zamień je w klasy
+Stwórz metodę która będzie w pełni generować dialog, przecież może on być niezależny od strony
+Dodać stylizację dialogu w main.css, wszędzie będzie działać

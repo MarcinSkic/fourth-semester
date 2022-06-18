@@ -8,9 +8,19 @@
 
     display: flex;
     flex-direction: column;
+    gap: 5px;
 }
 
 .add-new-field {
     display: flex;
     gap: 5px;
+}
+
+.template-field{
+    display: flex;
+    gap: 10px;
+}
+
+.template-field .field-name {
+    font-weight: 700;
 }

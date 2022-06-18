@@ -11,7 +11,7 @@
     <title>Create workout template</title>
 </head>
 <body>
-    <dialog class="create-template">
+    <dialog class="create-template-dialog">
         <form method="dialog">
             <h2>Create workout template</h2>
             <label for="place">Place: </label>
@@ -20,6 +20,14 @@
                 <option value="Gym">Gym</option>
             </datalist>
             <div class="fields-list">
+                <div class="template-field">
+                    <span class="field-name">Plank</span>
+                    <label for="sets-plank">Sets</label>
+                    <input type="number" name="sets-plank" id="sets-plank" disabled>
+                    <label for="reps-plank">Reps</label>
+                    <input type="number" name="reps-plank" id="reps-plank" disabled>
+                </div>
+                
                 <div class="add-new-field">
                     <input type="text" name="field-name" placeholder="Field Name">
                     <div class="field-options">
@@ -44,7 +52,7 @@
         </nav>
     </header>
     <main>
-        <button class="add-template">Create new template</button>
+        <button class="create-new-template-button">Create new template</button>
         <div class="templates-container">
             <div class="template"><span class="trening-name">Outdoors</span><button class="log-trening">Log this trening</button></div>
         </div>
