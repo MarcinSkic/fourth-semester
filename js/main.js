@@ -1,25 +1,11 @@
-
-const options = {
-	method: 'GET',
-	headers: {
-		'X-RapidAPI-Key': 'f7718aba17msh988a6d5c697e3a6p12ffa7jsn88d6576b411c',
-		'X-RapidAPI-Host': 'exercisedb.p.rapidapi.com'
-	}
-};
-
-fetch('https://exercisedb.p.rapidapi.com/exercises', options)
-	.then(response => response.json())
-	.then(response => console.log(response))
-	.catch(err => console.error(err));
-
-class WorkoutSession {
+class WorkoutSession {  //Klasa przechowująca dane o sesji treningowej
     constructor(){
-        this.template = null;
-        this.date = null;
+        this.template = null;   //Użyty wzór przy zapisywaniu sesji
+        this.date = null;   //Data odbytego treningu
     }
 
-    generateWorkoutSessionDialog(mode){
-        dialog.innerHTML = 
+    generateWorkoutSessionDialog(mode){ //Metoda tworząca wyskakujące okno do wypełniania sesji
+        dialog.innerHTML = //Dynamiczne stworzenie okna pozwalającego wypełnić sesję
         '<form class="create-session-form" method="dialog">' +
             `<h2>${mode} workout session</h2>`+
             
@@ -37,66 +23,64 @@ class WorkoutSession {
             `<button type="submit">${mode} session</button>` +
         `</form>`;
         
-        const pickTemplate = document.querySelector('#pick-template');
-        const templatesList = getTemplatesList();
+        const pickTemplate = document.querySelector('#pick-template');  //Znalezienie elementu select przechowującego dostępne wzory
+        const templatesList = getTemplatesList();   //Pobranie listy wzorów z localStorage
 
 
-        templatesList.forEach((workoutTemplate,index) => {
-            if(index === 0 && mode === 'Log'){
-                workoutTemplate = Object.assign(new WorkoutTemplate(),workoutTemplate);
+        templatesList.forEach((workoutTemplate,index) => {  //Dla kazdego wzoru..
+            if(index === 0 && mode === 'Log'){  //Pierwszy wzor zostaje wygenerowany jeżeli jest tryb tworzenia po raz pierwszy 'Log'
+                workoutTemplate = Object.assign(new WorkoutTemplate(),workoutTemplate); //Zamiana zwykłego obiektu na obiekt klasy wzorów żeby mieć dostęp do metody
                 workoutTemplate.generateWorkoutForm();
             }
             
-            let option = document.createElement('option');
-            option.setAttribute('value',workoutTemplate.name);
+            let option = document.createElement('option');  //..Stworzenie opcji w elemencie select..
+            option.setAttribute('value',workoutTemplate.name);//..nadanie odpowiedniej wartości..
             option.textContent = workoutTemplate.name;
 
-            pickTemplate.append(option);
+            pickTemplate.append(option);    //..i dodanie do DOM
         });
     }
 
-    generateWorkoutSession(){
-        const session = document.createElement('div');
+    generateWorkoutSession(){   //Metoda tworząca sesję treningową w DOM
+        const session = document.createElement('div');  //Stworzenie ogólnego kontenera
 
-        const sessionTemplate = document.createElement('span');
+        const sessionTemplate = document.createElement('span'); //Stworzenie i nadanie wartości pola z nazwą wzoru użytego w sesji
         sessionTemplate.textContent = this.template.name;
 
-        const sessionDate = document.createElement('span');
+        const sessionDate = document.createElement('span'); //Stworzenie i nadanie wartośći pola z datą odbycia sesji
         sessionDate.textContent = this.date;
 
-        const buttonsContainer = document.createElement('div');
+        const buttonsContainer = document.createElement('div'); //Kontener na przyciski
 
-        const editButton = document.createElement('button');
+        const editButton = document.createElement('button');    //Przycisk edycji z parametrami
         editButton.textContent = "Edit";
         editButton.classList.add('edit');
-        editButton.dataset.date = this.date;
+        editButton.dataset.date = this.date;    //Dodanie do przycisku atrybutu o formacie data-<wartość> w celu identyfikacji do jakiej sesji on należy w momencie wywołania metody
 
-        editButton.addEventListener('click',openSessionCreation);
+        editButton.addEventListener('click',openSessionCreation);   //Dodanie wywołania metody otwierającej okienko edycji przy kliknięciu
 
-        const deleteButton = document.createElement('button');
+        const deleteButton = document.createElement('button');  //Przycisk usuwania z parametrami
         deleteButton.textContent = "Delete";
         deleteButton.classList.add('delete');
-        deleteButton.dataset.date = this.date;
+        deleteButton.dataset.date = this.date; //Dodanie do przycisku atrybutu o formacie data-<wartość> w celu identyfikacji do jakiej sesji on należy w momencie wywołania metody
         
-        deleteButton.addEventListener('click',deleteSession);
+        deleteButton.addEventListener('click',deleteSession);   //Dodanie wywołania metody usuwania sesji
 
-        buttonsContainer.append(editButton,deleteButton);
-
+        buttonsContainer.append(editButton,deleteButton);   //Dodanie elementów do rodziców
         session.append(sessionTemplate,sessionDate,buttonsContainer);
-
         sessionsContainer.append(session);
     }
 
-    loadDataIntoForm(){
-        const pickTemplate = document.querySelector('#pick-template');
-        [...pickTemplate.options].find(option => option.text === this.template.name).selected = true;
+    loadDataIntoForm(){ //Metoda załadowująca istniejące dane do wyświetlenia
+        const pickTemplate = document.querySelector('#pick-template');  //Znalezienie elementu select przechowującego dostępne wzory
+        [...pickTemplate.options].find(option => option.text === this.template.name).selected = true;   //Znalezienie i wybranie z listy wzoru który ma ten obiekt sesji
 
-        const dateInput = document.querySelector('#date');
+        const dateInput = document.querySelector('#date');  //Znalezienie i ustawienie wartości polu z datą
         dateInput.value = this.date;
 
-        Object.assign(new WorkoutTemplate(),this.template).generateWorkoutForm();
+        Object.assign(new WorkoutTemplate(),this.template).generateWorkoutForm();   //Wygenerowanie formularza na podstawie wzoru
 
-        this.template.fields.forEach(field => {
+        this.template.fields.forEach(field => { //Dla każdego pola sprawdź czy zawiera takie części i jeżeli tak to ustaw im zapisaną wartość
             if(field.type.includes('sets')){
                 document.querySelector(`#sets-${field.name}`).value = field.values['sets'];
             }
@@ -130,19 +114,19 @@ const templateNameInput = document.querySelector('input#template-name');
         });
         */
 
-class WorkoutTemplate{
+class WorkoutTemplate{  //Klasa przechowująca wzory treningów
 
-    constructor(){
+    constructor(){  //Wzory składają się z: nazwy i różnych pól, opcjonalnie miejsca treningu
         this.name = '';
         this.place = '';
         this.fields = [];
     }
 
-    addField(workoutField){
+    addField(workoutField){ //Dodaj pole do wzoru
         this.fields.push(workoutField);
     }
 
-    generateWorkoutTemplateDialog(mode){
+    generateWorkoutTemplateDialog(mode){    //Wygenerowanie formularza do tworzenia wzorów
         dialog.innerHTML = 
         '<form class="create-template-form" method="dialog">' +
             `<h2>${mode} workout template</h2>`+
@@ -175,8 +159,9 @@ class WorkoutTemplate{
         `</form>`;
     }
 
-    generateWorkoutTemplate(){
-        const template = document.createElement('div');
+    generateWorkoutTemplate(){  //Metoda tworząca wzór treningowy w DOM
+        //Metoda na tych samych zasadach co generateWorkoutSession, komentarze tam 
+        const template = document.createElement('div'); 
 
         const templateName = document.createElement('div');
         templateName.classList.add('template-element-name');
@@ -211,75 +196,74 @@ class WorkoutTemplate{
         templatesContainer.append(template);
     }
 
-    generateWorkoutForm(){
-        const templateForm = document.querySelector('.template-form');
+    generateWorkoutForm(){  //Metoda tworząca formularz do wypełnienia na podstawie wzoru
+        const templateForm = document.querySelector('.template-form');  //Znajdź element przeznaczony do przechowywania formularza
 
-        templateForm.innerHTML = '';
+        templateForm.innerHTML = '';    //Wyczyszczenie, tylko jeden formularz na raz może być wyświetlony
 
-        const templateName = document.createElement('span');
+        const templateName = document.createElement('span');    //Nazwa wzoru
         templateName.textContent = this.name;
 
-        const templatePlace = document.createElement('span');
+        const templatePlace = document.createElement('span');   //Miejsce odbywania treningów
         templatePlace.textContent = this.place;
 
-        templateForm.append(templateName,templatePlace);
+        templateForm.append(templateName,templatePlace);    //Dodaj wygenerowane dane
 
-        const templateFormContainer = document.createElement('div');
+        const templateFormContainer = document.createElement('div');    //Wygeneruj kontener na pola
         templateFormContainer.classList.add('template-form-container');
 
         templateForm.append(templateFormContainer);
 
-        this.fields.forEach(field => {
-            field = Object.assign(new WorkoutField(),field);
-            console.log(field);
-            field.generateWorkoutField(templateFormContainer,false,true);
+        this.fields.forEach(field => {  //Dla każdego pola..
+            field = Object.assign(new WorkoutField(),field);    //..wskaż że należy do klasy..
+            field.generateWorkoutField(templateFormContainer,false,true);   //..wywołaj metodę która w oparciu o dane obiektu stworzy pole argumenty (false,true) sterują tym czy pole jest do edycji (sesja) czy tylko wyświetlania (wzór)
         })
     }
 
-    loadDataIntoForm(){
-        const templateNameInput = document.querySelector('input#template-name');
+    loadDataIntoForm(){     //Metoda załadowująca istniejące dane do wyświetlenia
+        const templateNameInput = document.querySelector('input#template-name');    //Ustaw nazwę wzoru
         templateNameInput.value = this.name;
 
-        const templatePlaceInput = document.querySelector('input#place');
+        const templatePlaceInput = document.querySelector('input#place');   //Ustaw miejsce treningu wzoru
         templatePlaceInput.value = this.place;
 
         const fieldsContainer = document.querySelector(".fields-list"); //Znajdź element przechowujący wszystkie pola
 
-        this.fields.forEach(field => {
-            field = Object.assign(new WorkoutField(),field);
-            field.generateWorkoutField(fieldsContainer,true,false);
+        this.fields.forEach(field => {  //Dla każdego pola wzoru
+            field = Object.assign(new WorkoutField(),field);    //..wskaż że należy do klasy..
+            field.generateWorkoutField(fieldsContainer,true,false); //..wywołaj metodę która w oparciu o dane obiektu stworzy pole argumenty (true,false) sterują tym czy pole jest do edycji (sesja) czy tylko wyświetlania (wzór)
         });
     }
 }
 
-class WorkoutField{
+class WorkoutField{ //Pole sesji lub wzoru, może się składać z kilku części
     constructor(name,type){
-        this.name = name;
-        this.type = type;
-        this.values = {};
+        this.name = name;   //Nazwa pola
+        this.type = type;   //Rodzaj pola
+        this.values = {};   //Części z jakich się składa
     }
 
     //W tej i innych pokrewnych metodach nie używam innerHTML ponieważ użytkownik wprowadza dane, co grozi HTML injection
     generateWorkoutField(whereToAppend,isDisabled,isRequired){
-        let newField = document.createElement('div');   //Stworzenie elementu (jeszcze nie istnieje w DOM strony) i dodanie klasy
+        let newField = document.createElement('div');   //Stworzenie elementu (jeszcze nie istnieje w DOM strony) i dodanie atrybutów
         newField.classList.add("template-field");
         newField.dataset.name = this.name;
 
-        let span = document.createElement('span');  //Stworzenie elementu (jeszcze nie istnieje w DOM strony) i dodanie klasy
+        let span = document.createElement('span');  //Stworzenie elementu (jeszcze nie istnieje w DOM strony) i dodanie atrybutów
         span.classList.add('field-name');
-        span.textContent = this.name; //Zabezpieczenie przed HTML injection
+        span.textContent = this.name;
 
         newField.appendChild(span); //Dodanie elementu span jako dziecka
 
         if(this.type.includes("sets-and-reps")){    //Jeżeli typ pola zawiera nazwę "sets-and-reps"
             newField.appendChild(this.createNumberPart('sets',this.name,isDisabled,isRequired));    //Dodaj elementy
             newField.appendChild(this.createNumberPart('reps',this.name,isDisabled,isRequired));
-            if(this.type === "sets-and-reps-with-weight"){  //Jeżeli jest równe temu typowi
+            if(this.type === "sets-and-reps-with-weight"){  //Jeżeli jest dokładnie tym type
                 newField.appendChild(this.createNumberPart('weight',this.name,isDisabled,isRequired));  //Dodaj kolejny element
             }
         }
         
-        if(this.type === 'checkbox'){
+        if(this.type === 'checkbox'){//itd.
             newField.appendChild(this.createCheckboxPart('checkbox',this.name,isDisabled));
         }
 
@@ -287,37 +271,36 @@ class WorkoutField{
             newField.appendChild(this.createNumberPart('numerical',this.name,isDisabled,isRequired));
         }
         
-        whereToAppend.append(newField); //Dodaj nowe pole przed elementem tworzącym pola
+        whereToAppend.append(newField); //Dodaj nowe pole do DOM
     }
 
-    createNumberPart(category,name,isDisabled,isRequired){
-        let label = document.createElement('label');
-        let input = document.createElement('input');
+    createNumberPart(category,name,isDisabled,isRequired){  //Stwórz liczbową część pola
+        let label = document.createElement('label');    //Etykieta
+        let input = document.createElement('input');    //Pole do wprowadzania wartości
     
-        label.setAttribute('for',`${category}-${name}`);
-        label.textContent = capitalizeFirstLetter(category);
+        label.setAttribute('for',`${category}-${name}`);    //Unikatowa nazwa składająca się z typu i nazwy ogólnego pola
+        label.textContent = capitalizeFirstLetter(category);    //Pierwsza litera z dużej
         
-        input.setAttribute('type','number');
+        input.setAttribute('type','number');    //Stworzenie pola i ustawienie parametrów
         input.setAttribute('name',`${category}-${name}`);
         input.setAttribute('id',`${category}-${name}`);
         input.disabled = isDisabled;
         input.required = isRequired;
     
-        let container = document.createElement('div');
+        let container = document.createElement('div');  //Stworzenie pojemnika na przechowywanie elementów
         container.classList.add('number-part');
     
-        if(category !== 'numerical'){
+        if(category !== 'numerical'){   //Jeżeli pole jest typu liczbowego to nie potrzebna etykieta bo zawiera tylko jedną wartość, nazwa główna opisuje wystarczająco
             container.append(label);
         }
     
         container.append(input);
-        
-        return container;
+            
+        return container; //Zwrócenie węzła HTMLowego który jeszcze nie jest dodany do DOM ale istnieje już w pamięci
     }
 
-    createCheckboxPart(category,name,isDisabled){
-        let input = document.createElement('input');
-        
+    createCheckboxPart(category,name,isDisabled){   //Stwórz przycisk tak/nie
+        let input = document.createElement('input');    //Stworzenie elementu i nadanie atrybutów
         input.setAttribute('type','checkbox');
         input.setAttribute('name',`${category}-${name}`);
         input.setAttribute('id',`${category}-${name}`)
