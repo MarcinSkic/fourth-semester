@@ -14,7 +14,7 @@ fetch('https://exercisedb.p.rapidapi.com/exercises', options)
 
 class WorkoutSession {
     constructor(){
-        this.usedTemplate = null;
+        this.template = null;
         this.date = null;
     }
 
@@ -40,10 +40,15 @@ class WorkoutSession {
         const pickTemplate = document.querySelector('#pick-template');
         const templatesList = getTemplatesList();
 
-        templatesList.forEach(element => {
+        templatesList.forEach((workoutTemplate,index) => {
+            if(index === 0){
+                workoutTemplate = Object.assign(new WorkoutTemplate(),workoutTemplate);
+                workoutTemplate.generateWorkoutForm();
+            }
+
             let option = document.createElement('option');
-            option.setAttribute('value',element.name);
-            option.textContent = element.name;
+            option.setAttribute('value',workoutTemplate.name);
+            option.textContent = workoutTemplate.name;
 
             pickTemplate.append(option);
         });
@@ -132,10 +137,6 @@ class WorkoutTemplate{
             console.log(field);
             field.generateWorkoutField(templateFormContainer,false,true);
         })
-
-        
-
-        console.log("hej my name is " + this.name);
     }
 }
 
@@ -143,12 +144,14 @@ class WorkoutField{
     constructor(name,type){
         this.name = name;
         this.type = type;
+        this.values = {};
     }
 
     //W tej i innych pokrewnych metodach nie używam innerHTML ponieważ użytkownik wprowadza dane, co grozi HTML injection
     generateWorkoutField(whereToAppend,isDisabled,isRequired){
         let newField = document.createElement('div');   //Stworzenie elementu (jeszcze nie istnieje w DOM strony) i dodanie klasy
         newField.classList.add("template-field");
+        newField.dataset.name = this.name;
 
         let span = document.createElement('span');  //Stworzenie elementu (jeszcze nie istnieje w DOM strony) i dodanie klasy
         span.classList.add('field-name');
@@ -165,7 +168,7 @@ class WorkoutField{
         }
         
         if(this.type === 'checkbox'){
-            newField.appendChild(this.createCheckboxPart('checkbox',this.name,isDisabled,isRequired));
+            newField.appendChild(this.createCheckboxPart('checkbox',this.name,isDisabled));
         }
 
         if(this.type === 'numerical'){
@@ -200,14 +203,13 @@ class WorkoutField{
         return container;
     }
 
-    createCheckboxPart(category,name,isDisabled,isRequired){
+    createCheckboxPart(category,name,isDisabled){
         let input = document.createElement('input');
         
         input.setAttribute('type','checkbox');
         input.setAttribute('name',`${category}-${name}`);
         input.setAttribute('id',`${category}-${name}`)
         input.disabled = isDisabled;
-        input.required = isRequired;
     
         let container = document.createElement('div');
         container.classList.add('checkbox-part');
@@ -290,12 +292,19 @@ function tryCreatingTemplateField(){
         fieldName.setCustomValidity("");
     }
 
+    if(currentOpenedWorkoutTemplate.fields.find(element => element.name === fieldName.value)){
+        fieldName.setCustomValidity("Already exists field with that name");
+        fieldName.reportValidity();
+        return;
+    } else {
+        fieldName.setCustomValidity("");
+    }
+
     newWorkoutField = new WorkoutField(fieldName.value,fieldType.value);
     newWorkoutField.generateWorkoutField(fieldsContainer,true,false);
 
     currentOpenedWorkoutTemplate.addField(newWorkoutField);
 }
-
 
 function tryTemplateSubmission(event){
     const field = document.querySelector("[name='field-name']");
@@ -336,18 +345,6 @@ function onTemplateCreationCancel(event){
     }
 }
 
-function getTemplatesList(){
-    let templatesList = JSON.parse(localStorage.getItem(LOC_STORAGE_TEMPLATES_LIST));
-
-    if(templatesList == null) templatesList = [];
-
-    return templatesList;
-}
-
-function capitalizeFirstLetter(string){
-    return string.charAt(0).toUpperCase() + string.slice(1);
-}
-
 //SESSION-SITE-SECTION
 
 const logSessionButton = document.querySelector('.create-new-session-button');
@@ -360,15 +357,66 @@ function openSessionCreation(event){
     currentOpenedSession.generateWorkoutSessionDialog();
 
     const pickTemplate = document.querySelector('#pick-template');
-    pickTemplate.addEventListener('input',tryGeneratingWorkoutForm)
+    pickTemplate.addEventListener('input',tryGeneratingWorkoutForm);
+
+    const createTemplateForm = document.querySelector(".create-session-form");
+    createTemplateForm.addEventListener('submit',onSessionSubmission);
 
     dialog.showModal();
 }
 
 function tryGeneratingWorkoutForm(event){
-    let workoutTemplate = getTemplatesList().find(element => element.name === event.target.options[event.target.selectedIndex].text);
+    let workoutTemplate = getTemplatesList().find(element => element.name === getSelectOptionName(event.target));
 
     workoutTemplate = Object.assign(new WorkoutTemplate(),workoutTemplate);
 
     workoutTemplate.generateWorkoutForm();
+}
+
+function onSessionSubmission(event){
+    const pickTemplate = document.querySelector('#pick-template');
+    const templateName = getSelectOptionName(pickTemplate);
+
+    const templatesList = getTemplatesList();
+    let templateToSubmit = templatesList.find(template => template.name === templateName);
+
+    templateToSubmit.fields.forEach(field => {
+        const fieldsInputs = document.querySelectorAll(`[data-name="${field.name}"] input`);
+
+        values = {};
+        fieldsInputs.forEach(fieldInput => {
+            let type = fieldInput.id.replace('-'+field.name,'');
+            if(type === 'checkbox'){
+                values[type] = fieldInput.checked;
+            } else {
+                values[type] = fieldInput.value;
+            }
+        });
+        
+        field.values = values;
+    });
+
+    let date = document.querySelector('#date').value;
+
+    currentOpenedSession.template = templateToSubmit;
+    currentOpenedSession.date = date;
+
+    console.log(currentOpenedSession);
+}
+
+//USED-BY-EVERYONE
+function getTemplatesList(){
+    let templatesList = JSON.parse(localStorage.getItem(LOC_STORAGE_TEMPLATES_LIST));
+
+    if(templatesList == null) templatesList = [];
+
+    return templatesList;
+}
+
+function getSelectOptionName(select){
+    return select.options[select.selectedIndex].text;
+}
+
+function capitalizeFirstLetter(string){
+    return string.charAt(0).toUpperCase() + string.slice(1);
 }
