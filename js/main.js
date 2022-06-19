@@ -19,7 +19,23 @@ class WorkoutSession {
     }
 
     generateWorkoutSessionDialog(){
-        
+        dialog.innerHTML = 
+        '<form class="create-session-form" method="dialog">' +
+            '<h2>Log workout session</h2>'+
+            '<div class="session-header">'+
+                `<div>` +
+                    `<label for="pick-template">Name: </label>` +
+                    '<select name="pick-template" id="pick-template" required></select>'
+                `</div>` +
+                `<div>` +
+                    `<label for="date">Date: </label>` +
+                    `<input type="date" name="date" id="date" required>` +
+                `</div>` +
+            '</div>'
+            `<div class="template-form">` +
+            `</div>` +
+            `<button type="submit">Log session</button>` +
+        `</form>`;
     }
 }
 
@@ -101,19 +117,19 @@ class WorkoutField{
         newField.appendChild(span); //Dodanie elementu span jako dziecka
 
         if(this.type.includes("sets-and-reps")){    //Jeżeli typ pola zawiera nazwę "sets-and-reps"
-            newField.appendChild(generateNumberPart('sets',this.name,isDisabled,isRequired));    //Dodaj elementy
-            newField.appendChild(generateNumberPart('reps',this.name,isDisabled,isRequired));
+            newField.appendChild(this.generateNumberPart('sets',this.name,isDisabled,isRequired));    //Dodaj elementy
+            newField.appendChild(this.generateNumberPart('reps',this.name,isDisabled,isRequired));
             if(this.type === "sets-and-reps-with-weight"){  //Jeżeli jest równe temu typowi
-                newField.appendChild(generateNumberPart('weight',this.name,isDisabled,isRequired));  //Dodaj kolejny element
+                newField.appendChild(this.generateNumberPart('weight',this.name,isDisabled,isRequired));  //Dodaj kolejny element
             }
         }
         
         if(this.type === 'checkbox'){
-            newField.appendChild(generateCheckboxPart('checkbox',this.name,isDisabled,isRequired));
+            newField.appendChild(this.generateCheckboxPart('checkbox',this.name,isDisabled,isRequired));
         }
 
         if(this.type === 'numerical'){
-            newField.appendChild(generateNumberPart('numerical',this.name,isDisabled,isRequired));
+            newField.appendChild(this.generateNumberPart('numerical',this.name,isDisabled,isRequired));
         }
 
         const addNewField = document.querySelector(".add-new-field");   //Znajdź element tworzenia nowych pól, żeby dodawać pola przed nim
@@ -121,13 +137,53 @@ class WorkoutField{
         fieldsContainer.insertBefore(newField,addNewField); //Dodaj nowe pole przed elementem tworzącym pola
     }
 
+    generateNumberPart(category,name,isDisabled,isRequired){
+        let label = document.createElement('label');
+        let input = document.createElement('input');
+    
+        label.setAttribute('for',`${category}-${name}`);
+        label.textContent = capitalizeFirstLetter(category);
+        
+        input.setAttribute('type','number');
+        input.setAttribute('name',`${category}-${name}`);
+        input.setAttribute('id',`${category}-${name}`)
+        input.disabled = isDisabled;
+        input.required = isRequired;
+    
+        let container = document.createElement('div');
+        container.classList.add('number-part');
+    
+        if(category !== 'numerical'){
+            container.append(label);
+        }
+    
+        container.append(input);
+        
+        return container;
+    }
+
+    generateCheckboxPart(category,name,isDisabled,isRequired){
+        let input = document.createElement('input');
+        
+        input.setAttribute('type','checkbox');
+        input.setAttribute('name',`${category}-${name}`);
+        input.setAttribute('id',`${category}-${name}`)
+        input.disabled = isDisabled;
+        input.required = isRequired;
+    
+        let container = document.createElement('div');
+        container.classList.add('checkbox-part');
+        container.append(input);
+        return container;
+    }
+
     generateWorkoutFieldTitle(){
 
     }
 }
+const dialog = document.querySelector("dialog");
 
 const addTemplateButton = document.querySelector(".create-new-template-button");
-const dialog = document.querySelector("dialog");
 const templatesContainer = document.querySelector(".templates-container");
 
 addTemplateButton.addEventListener('click',openTemplateCreation);
@@ -135,7 +191,9 @@ addTemplateButton.addEventListener('click',openTemplateCreation);
 const LOC_STORAGE_TEMPLATES_LIST = 'templatesList';
 
 currentOpenedWorkoutTemplate = new WorkoutTemplate();
-generateTemplates();
+if(templatesContainer != null){
+    generateTemplates();
+}
 
 function generateTemplates(){
     templatesContainer.innerHTML = "";
@@ -148,54 +206,16 @@ function generateTemplates(){
     });
 }
 
-function generateNumberPart(category,name,isDisabled,isRequired){
-    let label = document.createElement('label');
-    let input = document.createElement('input');
-
-    label.setAttribute('for',`${category}-${name}`);
-    label.textContent = capitalizeFirstLetter(category);
-    
-    input.setAttribute('type','number');
-    input.setAttribute('name',`${category}-${name}`);
-    input.setAttribute('id',`${category}-${name}`)
-    input.disabled = isDisabled;
-    input.required = isRequired;
-
-    let container = document.createElement('div');
-    container.classList.add('number-part');
-
-    if(category !== 'numerical'){
-        container.append(label);
-    }
-
-    container.append(input);
-    
-    return container;
-}
-
-function generateCheckboxPart(category,name,isDisabled,isRequired){
-    let input = document.createElement('input');
-    
-    input.setAttribute('type','checkbox');
-    input.setAttribute('name',`${category}-${name}`);
-    input.setAttribute('id',`${category}-${name}`)
-    input.disabled = isDisabled;
-    input.required = isRequired;
-
-    let container = document.createElement('div');
-    container.classList.add('checkbox-part');
-    container.append(input);
-    return container;
-}
-
-function capitalizeFirstLetter(string){
-    return string.charAt(0).toUpperCase() + string.slice(1);
-}
-
 function openTemplateCreation(event){
     //Create page loading if data-id for this template shows something aka for edition
     currentOpenedWorkoutTemplate = new WorkoutTemplate();
     currentOpenedWorkoutTemplate.generateWorkoutTemplateDialog();
+
+    const templateName = document.querySelector("#template-name");
+    templateName.addEventListener('input',onTemplateNameChange);
+
+    const addTemplateField = document.querySelector(".add-field-button");
+    addTemplateField.addEventListener('click',tryCreatingTemplateField);
 
     const submitButton = document.querySelector("[type='submit']");
     submitButton.addEventListener('click',tryTemplateSubmission);
@@ -203,16 +223,21 @@ function openTemplateCreation(event){
     const createTemplateForm = document.querySelector(".create-template-form");
     createTemplateForm.addEventListener('submit',onTemplateSubmission);
 
-    const addTemplateField = document.querySelector(".add-field-button");
-    addTemplateField.addEventListener('click',tryCreatingTemplateField);
-
-    const templateName = document.querySelector("#template-name");
-    templateName.addEventListener('input',onTemplateNameChange);
-
     dialog.addEventListener('cancel',onTemplateCreationCancel);
 
     dialog.showModal();
 }
+
+function onTemplateNameChange(event){
+    templatesList = getTemplatesList();
+
+    if(templatesList.find(element => element.name === event.target.value)){
+        event.target.setCustomValidity("There already exists template with that name");
+    } else {
+        event.target.setCustomValidity("");
+    }
+}
+
 
 function tryCreatingTemplateField(){
     const fieldName = document.querySelector("[name='field-name']");
@@ -232,15 +257,6 @@ function tryCreatingTemplateField(){
     currentOpenedWorkoutTemplate.addField(newWorkoutField);
 }
 
-function onTemplateNameChange(event){
-    templatesList = getTemplatesList();
-
-    if(templatesList.find(element => element.name === event.target.value)){
-        event.target.setCustomValidity("There already exists template with that name");
-    } else {
-        event.target.setCustomValidity("");
-    }
-}
 
 function tryTemplateSubmission(event){
     const field = document.querySelector("[name='field-name']");
@@ -273,6 +289,14 @@ function onTemplateSubmission(event){
     currentOpenedWorkoutTemplate = null;
 }
 
+function onTemplateCreationCancel(event){
+    if(currentOpenedWorkoutTemplate.fields.length !== 0){
+        if(!window.confirm("Are you sure you want to cancel edition of this template?")){
+            event.preventDefault();
+        }
+    }
+}
+
 function getTemplatesList(){
     let templatesList = JSON.parse(localStorage.getItem(LOC_STORAGE_TEMPLATES_LIST));
 
@@ -281,10 +305,6 @@ function getTemplatesList(){
     return templatesList;
 }
 
-function onTemplateCreationCancel(event){
-    if(currentOpenedWorkoutTemplate.fields.length !== 0){
-        if(!window.confirm("Are you sure you want to cancel edition of this template?")){
-            event.preventDefault();
-        }
-    }
+function capitalizeFirstLetter(string){
+    return string.charAt(0).toUpperCase() + string.slice(1);
 }
