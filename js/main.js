@@ -18,10 +18,10 @@ class WorkoutSession {
         this.date = null;
     }
 
-    generateWorkoutSessionDialog(){
+    generateWorkoutSessionDialog(mode){
         dialog.innerHTML = 
         '<form class="create-session-form" method="dialog">' +
-            '<h2>Log workout session</h2>'+
+            `<h2>${mode} workout session</h2>`+
             '<div class="session-header">'+
                 `<div>` +
                     `<label for="pick-template">Name: </label>` +
@@ -34,18 +34,19 @@ class WorkoutSession {
             '</div>'+
             `<div class="template-form">` +
             `</div>` +
-            `<button type="submit">Log session</button>` +
+            `<button type="submit">${mode} session</button>` +
         `</form>`;
         
         const pickTemplate = document.querySelector('#pick-template');
         const templatesList = getTemplatesList();
 
+
         templatesList.forEach((workoutTemplate,index) => {
-            if(index === 0){
+            if(index === 0 && mode === 'Log'){
                 workoutTemplate = Object.assign(new WorkoutTemplate(),workoutTemplate);
                 workoutTemplate.generateWorkoutForm();
             }
-
+            
             let option = document.createElement('option');
             option.setAttribute('value',workoutTemplate.name);
             option.textContent = workoutTemplate.name;
@@ -63,11 +64,69 @@ class WorkoutSession {
         const sessionDate = document.createElement('span');
         sessionDate.textContent = this.date;
 
-        session.append(sessionTemplate,sessionDate);
+        const buttonsContainer = document.createElement('div');
+
+        const editButton = document.createElement('button');
+        editButton.textContent = "Edit";
+        editButton.classList.add('edit');
+        editButton.dataset.date = this.date;
+
+        editButton.addEventListener('click',openSessionCreation);
+
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = "Delete";
+        deleteButton.classList.add('delete');
+        deleteButton.dataset.name = this.name;
+
+        buttonsContainer.append(editButton,deleteButton);
+
+        session.append(sessionTemplate,sessionDate,buttonsContainer);
 
         sessionsContainer.append(session);
     }
+
+    loadDataIntoForm(){
+        const pickTemplate = document.querySelector('#pick-template');
+        [...pickTemplate.options].find(option => option.text === this.template.name).selected = true;
+
+        const dateInput = document.querySelector('#date');
+        dateInput.value = this.date;
+
+        Object.assign(new WorkoutTemplate(),this.template).generateWorkoutForm();
+
+        this.template.fields.forEach(field => {
+            if(field.type.includes('sets')){
+                document.querySelector(`#sets-${field.name}`).value = field.values['sets'];
+            }
+            if(field.type.includes('reps')){
+                document.querySelector(`#reps-${field.name}`).value = field.values['reps'];
+            }
+            if(field.type.includes('weight')){
+                document.querySelector(`#weight-${field.name}`).value = field.values['weight'];
+            }
+            if(field.type.includes('checkbox')){
+                document.querySelector(`#checkbox-${field.name}`).checked = field.values['checkbox'];
+            }
+            if(field.type.includes('numerical')){
+                document.querySelector(`#numerical-${field.name}`).value = field.values['numerical'];
+            }
+        });
+    }
 }
+/*
+const templateNameInput = document.querySelector('input#template-name');
+        templateNameInput.value = this.name;
+
+        const templatePlaceInput = document.querySelector('input#place');
+        templatePlaceInput.value = this.place;
+
+        const fieldsContainer = document.querySelector(".fields-list"); //Znajdź element przechowujący wszystkie pola
+
+        this.fields.forEach(field => {
+            field = Object.assign(new WorkoutField(),field);
+            field.generateWorkoutField(fieldsContainer,true,false);
+        });
+        */
 
 class WorkoutTemplate{
 
@@ -81,10 +140,10 @@ class WorkoutTemplate{
         this.fields.push(workoutField);
     }
 
-    generateWorkoutTemplateDialog(){
+    generateWorkoutTemplateDialog(mode){
         dialog.innerHTML = 
         '<form class="create-template-form" method="dialog">' +
-            '<h2>Create workout template</h2>'+
+            `<h2>${mode} workout template</h2>`+
             `<div>` +
                 `<label for="template-name">Name: </label>` +
                 `<input type="text" name="template-name" id="template-name" placeholder="What is it, when is it?" required>` +
@@ -110,7 +169,7 @@ class WorkoutTemplate{
                         `<button type="button" class="add-field-button">+</button>` +
                     `</div>` +
                 `</div>` +
-            `<button type="submit">Create template</button>` +
+            `<button type="submit">${mode} template</button>` +
         `</form>`;
     }
 
@@ -123,7 +182,24 @@ class WorkoutTemplate{
         const templatePlace = document.createElement('span');
         templatePlace.textContent = this.place;
 
-        template.append(templateName,templatePlace)
+
+        const buttonsContainer = document.createElement('div');
+
+        const editButton = document.createElement('button');
+        editButton.textContent = "Edit";
+        editButton.classList.add('edit');
+        editButton.dataset.name = this.name;
+
+        editButton.addEventListener('click',openTemplateCreation);
+
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = "Delete";
+        deleteButton.classList.add('delete');
+        deleteButton.dataset.name = this.name;
+
+        buttonsContainer.append(editButton,deleteButton);
+
+        template.append(templateName,templatePlace,buttonsContainer)
 
         templatesContainer.append(template);
     }
@@ -151,6 +227,21 @@ class WorkoutTemplate{
             console.log(field);
             field.generateWorkoutField(templateFormContainer,false,true);
         })
+    }
+
+    loadDataIntoForm(){
+        const templateNameInput = document.querySelector('input#template-name');
+        templateNameInput.value = this.name;
+
+        const templatePlaceInput = document.querySelector('input#place');
+        templatePlaceInput.value = this.place;
+
+        const fieldsContainer = document.querySelector(".fields-list"); //Znajdź element przechowujący wszystkie pola
+
+        this.fields.forEach(field => {
+            field = Object.assign(new WorkoutField(),field);
+            field.generateWorkoutField(fieldsContainer,true,false);
+        });
     }
 }
 
@@ -245,6 +336,7 @@ const LOC_STORAGE_TEMPLATES_LIST = 'templatesList';
 const LOC_STORAGE_SESSIONS_LIST = 'sessionsList';
 
 currentOpenedWorkoutTemplate = new WorkoutTemplate();
+editedTemplateIndex = -1;
 if(templatesContainer != null){ //TODO fix if splitted to different scripts
     generateTemplates();
 }
@@ -261,32 +353,76 @@ function generateTemplates(){
 }
 
 function openTemplateCreation(event){
-    //Create page loading if data-id for this template shows something aka for edition
-    currentOpenedWorkoutTemplate = new WorkoutTemplate();
-    currentOpenedWorkoutTemplate.generateWorkoutTemplateDialog();
+
+    new WorkoutTemplate().generateWorkoutTemplateDialog();
+
+    const existingTemplateName = event.target.dataset.name;
+
+    if(existingTemplateName != null){
+        new WorkoutTemplate().generateWorkoutTemplateDialog('Edit');
+
+        const templatesList = getTemplatesList();
+        let template = templatesList.find(template => template.name == existingTemplateName);
+        currentOpenedWorkoutTemplate = Object.assign(new WorkoutTemplate(),template);
+        currentOpenedWorkoutTemplate.loadDataIntoForm();
+
+        editedTemplateIndex = templatesList.indexOf(template);
+
+        const createTemplateForm = document.querySelector(".create-template-form");
+        createTemplateForm.addEventListener('submit',onTemplateEdition);
+    } else {
+        new WorkoutTemplate().generateWorkoutTemplateDialog('Create');
+
+        const createTemplateForm = document.querySelector(".create-template-form");
+        createTemplateForm.addEventListener('submit',onTemplateSubmission);
+        
+        currentOpenedWorkoutTemplate = new WorkoutTemplate();
+    }
 
     const templateName = document.querySelector("#template-name");
     templateName.addEventListener('input',onTemplateNameChange);
-
+    
     const addTemplateField = document.querySelector(".add-field-button");
     addTemplateField.addEventListener('click',tryCreatingTemplateField);
 
     const submitButton = document.querySelector("[type='submit']");
     submitButton.addEventListener('click',tryTemplateSubmission);
 
-    const createTemplateForm = document.querySelector(".create-template-form");
-    createTemplateForm.addEventListener('submit',onTemplateSubmission);
-
     dialog.addEventListener('cancel',onTemplateCreationCancel);
 
     dialog.showModal();
 }
 
+function onTemplateEdition(event){
+    let templateName = document.querySelector('#template-name');
+    let templatePlace = document.querySelector('#place');
+
+    currentOpenedWorkoutTemplate.name = templateName.value;
+    currentOpenedWorkoutTemplate.place = templatePlace.value;
+
+    templatesList = getTemplatesList();
+
+    templatesList[editedTemplateIndex] = currentOpenedWorkoutTemplate;
+
+    localStorage.setItem(LOC_STORAGE_TEMPLATES_LIST,JSON.stringify(templatesList));
+
+    generateTemplates();
+    currentOpenedWorkoutTemplate = null;
+    editedTemplateIndex = -1;
+}
+
 function onTemplateNameChange(event){
     templatesList = getTemplatesList();
+    if(event.target.value.includes(' ')){
+        event.target.setCustomValidity("Template name can't contain white space");
+        return;
+    } else {
+        event.target.setCustomValidity("");
+    }
 
     if(templatesList.find(element => element.name === event.target.value)){
         event.target.setCustomValidity("There already exists template with that name");
+        return
     } else {
         event.target.setCustomValidity("");
     }
@@ -300,6 +436,14 @@ function tryCreatingTemplateField(){
 
     if(!fieldName.value || !fieldType.value){
         fieldName.setCustomValidity("Field name can't be empty");
+        fieldName.reportValidity();
+        return;
+    } else {
+        fieldName.setCustomValidity("");
+    }
+
+    if(fieldName.value.includes(' ')){
+        fieldName.setCustomValidity("Field name can't contain white spaces");
         fieldName.reportValidity();
         return;
     } else {
@@ -357,6 +501,7 @@ function onTemplateCreationCancel(event){
             event.preventDefault();
         }
     }
+    currentOpenedWorkoutTemplate = null;
 }
 
 //SESSION-SITE-SECTION
@@ -369,6 +514,7 @@ if(logSessionButton != null){
 }
 
 let currentOpenedSession;
+let editedSessionIndex = -1;
 if(sessionsContainer != null){
     generateSessions();
 }
@@ -382,18 +528,104 @@ function generateSessions(){
         session.generateWorkoutSession();
     });
 }
+    /*
+    const existingTemplateName = event.target.dataset.name;
+
+    if(existingTemplateName != null){
+        new WorkoutTemplate().generateWorkoutTemplateDialog('Edit');
+
+        const templatesList = getTemplatesList();
+        let template = templatesList.find(template => template.name === existingTemplateName);
+        currentOpenedWorkoutTemplate = Object.assign(new WorkoutTemplate(),template);
+        currentOpenedWorkoutTemplate.loadDataIntoForm();
+
+        editedTemplateIndex = templatesList.indexOf(template);
+
+        const createTemplateForm = document.querySelector(".create-template-form");
+        createTemplateForm.addEventListener('submit',onTemplateEdition);
+    } else {
+        new WorkoutTemplate().generateWorkoutTemplateDialog('Create');
+
+        const createTemplateForm = document.querySelector(".create-template-form");
+        createTemplateForm.addEventListener('submit',onTemplateSubmission);
+    }*/
 
 function openSessionCreation(event){
-    currentOpenedSession = new WorkoutSession();
-    currentOpenedSession.generateWorkoutSessionDialog();
+    const existingSessionDate = event.target.dataset.date;
+
+    if(existingSessionDate != null) {
+        new WorkoutSession().generateWorkoutSessionDialog('Edit');
+
+        const sessionsList = getSessionsList();
+        let session = sessionsList.find(session => session.date === existingSessionDate);
+        currentOpenedSession = Object.assign(new WorkoutSession(),session);
+        currentOpenedSession.loadDataIntoForm();
+
+        editedSessionIndex = sessionsList.indexOf(session);
+
+        const createTemplateForm = document.querySelector(".create-session-form");
+        createTemplateForm.addEventListener('submit',onSessionEdition);
+    } else {
+        new WorkoutSession().generateWorkoutSessionDialog('Log');
+
+        const createTemplateForm = document.querySelector(".create-session-form");
+        createTemplateForm.addEventListener('submit',onSessionSubmission);
+        currentOpenedSession = new WorkoutSession();
+    }
 
     const pickTemplate = document.querySelector('#pick-template');
     pickTemplate.addEventListener('input',tryGeneratingWorkoutForm);
 
-    const createTemplateForm = document.querySelector(".create-session-form");
-    createTemplateForm.addEventListener('submit',onSessionSubmission);
+    const dateInput = document.querySelector('#date');
+    dateInput.addEventListener('input',onDateChange);
 
     dialog.showModal();
+}
+
+function onSessionEdition(){
+    const pickTemplate = document.querySelector('#pick-template');
+    const templateName = getSelectOptionName(pickTemplate);
+
+    const templatesList = getTemplatesList();
+    let templateToSubmit = templatesList.find(template => template.name === templateName);
+
+    templateToSubmit.fields.forEach(field => {
+        const fieldsInputs = document.querySelectorAll(`[data-name="${field.name}"] input`);
+
+        values = {};
+        fieldsInputs.forEach(fieldInput => {
+            let type = fieldInput.id.replace('-'+field.name,'');
+            if(type === 'checkbox'){
+                values[type] = fieldInput.checked;
+            } else {
+                values[type] = fieldInput.value;
+            }
+        });
+        
+        field.values = values;
+    });
+
+    let date = document.querySelector('#date').value;
+
+    currentOpenedSession.template = templateToSubmit;
+    currentOpenedSession.date = date;
+
+    sessionsList = getSessionsList();
+    sessionsList[editedSessionIndex] = currentOpenedSession;
+    localStorage.setItem(LOC_STORAGE_SESSIONS_LIST,JSON.stringify(sessionsList));
+
+    generateSessions();
+    currentOpenedSession = null;
+}
+
+function onDateChange(event){
+    let sessionList = getSessionsList();
+
+    if(sessionList.find(element => element.date === event.target.value)){
+        event.target.setCustomValidity("There already exists session with that date");
+    } else {
+        event.target.setCustomValidity("");
+    }
 }
 
 function tryGeneratingWorkoutForm(event){
@@ -416,8 +648,8 @@ function onSessionSubmission(event){
 
         values = {};
         fieldsInputs.forEach(fieldInput => {
-            let type = fieldInput.id.replace('-'+field.name,'');
-            if(type === 'checkbox'){
+            let type = fieldInput.id.replace('-'+field.name,'');;
+            if(type.includes('checkbox')){
                 values[type] = fieldInput.checked;
             } else {
                 values[type] = fieldInput.value;
