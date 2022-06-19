@@ -1,7 +1,7 @@
 /*const options = {
 	method: 'GET',
 	headers: {
-		'X-RapidAPI-Key': '',
+		'X-RapidAPI-Key': 'f7718aba17msh988a6d5c697e3a6p12ffa7jsn88d6576b411c',
 		'X-RapidAPI-Host': 'exercisedb.p.rapidapi.com'
 	}
 };

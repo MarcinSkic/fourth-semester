@@ -299,8 +299,8 @@ class WorkoutField{ //Pole sesji lub wzoru, może się składać z kilku częśc
         return container; //Zwrócenie węzła HTMLowego który jeszcze nie jest dodany do DOM ale istnieje już w pamięci
     }
 
-    createCheckboxPart(category,name,isDisabled){   //Stwórz przycisk tak/nie
-        let input = document.createElement('input');    //Stworzenie elementu i nadanie atrybutów
+    createCheckboxPart(category,name,isDisabled){   //Stwórz przycisk tak/nie, podobnie jak powyżej
+        let input = document.createElement('input');    //Stworzenie elementu i nadanie atrybutów, itd.
         input.setAttribute('type','checkbox');
         input.setAttribute('name',`${category}-${name}`);
         input.setAttribute('id',`${category}-${name}`)
@@ -313,83 +313,81 @@ class WorkoutField{ //Pole sesji lub wzoru, może się składać z kilku częśc
     }
 }
 
-const dialog = document.querySelector("dialog");
+const dialog = document.querySelector("dialog");    //Wybranie elementu dialog, służącego do wyświetlania wyskakujących okien
 
-const addTemplateButton = document.querySelector(".create-new-template-button");
+const addTemplateButton = document.querySelector(".create-new-template-button");    
 const templatesContainer = document.querySelector(".templates-container");
 
-if(addTemplateButton != null){  //TODO fix if splitted to different scripts
-    addTemplateButton.addEventListener('click',openTemplateCreation);
+if(addTemplateButton != null){  //Jeżeli na stronie istnieje taki przycisk
+    addTemplateButton.addEventListener('click',openTemplateCreation);   //to zostanie dodana metoda otwierająca okno tworzenia wzoru
 }
 
-const LOC_STORAGE_TEMPLATES_LIST = 'templatesList';
+const LOC_STORAGE_TEMPLATES_LIST = 'templatesList'; //Stałe klucze do local storage, ustawione w celu uniknięcia pomyłki
 const LOC_STORAGE_SESSIONS_LIST = 'sessionsList';
 
-currentOpenedWorkoutTemplate = new WorkoutTemplate();
-editedTemplateIndex = -1;
-if(templatesContainer != null){ //TODO fix if splitted to different scripts
-    generateTemplates();
+currentOpenedWorkoutTemplate = new WorkoutTemplate();   //Zmienna przechowująca aktualnie otwarty wzór
+editedTemplateIndex = -1;   //Indeks edytowanego wzoru (do edycji i usuwania wzorów)
+
+if(templatesContainer != null){ //Jeżeli na stronie istnieje kontener na wzory
+    generateTemplates();    //To zostaną wygenerowane na stronie
 }
 
-function generateTemplates(){
-    templatesContainer.innerHTML = "";
+function generateTemplates(){   //Metoda generująca wzory na stronie
+    templatesContainer.innerHTML = "";  //Wyczyść kontener
     
-    let templatesList = getTemplatesList();
-    console.log(templatesList);
-    templatesList.forEach(element => {
-        element = Object.assign(new WorkoutTemplate(),element);
-        element.generateWorkoutTemplate();
+    let templatesList = getTemplatesList(); //Pobierz listę wzorów
+    templatesList.forEach(element => {  //Dla każdego wzoru
+        element = Object.assign(new WorkoutTemplate(),element); //Przypisz wzór do klasy
+        element.generateWorkoutTemplate();  //Wywołaj metodę na obiekcie
     });
 }
 
-function deleteTemplate(event){
-    if(!window.confirm("Warning, this will delete all sessions based on this template!")){
+function deleteTemplate(event){ //Metoda usuwająca wzór z listy
+    if(!window.confirm("Warning, this will delete all sessions based on this template!")){  //Ostrzeżenie, użytkownik może zrezygnować z działania
         return;
     }
-    const templateToDeleteName = event.target.dataset.name;
+    const templateToDeleteName = event.target.dataset.name; //Pobranie nazwy wzoru do usunięcia z atrybutu data-<wartość> dodanego w celu identyfikacji
 
-    let newSessionsList = [];
-    const sessionsList = getSessionsList();
-    sessionsList.forEach(session =>{
-        if(session.template.name !== templateToDeleteName){
-            newSessionsList.push(session);
+    let newSessionsList = [];   //Nowa lista sesji po usunięciu tych opartych o usuwany wzór
+    const sessionsList = getSessionsList(); //Pobierz listę wzorów
+    sessionsList.forEach(session =>{    //Dla każdego wzoru
+        if(session.template.name !== templateToDeleteName){ //Jeżeli nie jest stworzony z tego wzoru
+            newSessionsList.push(session);  //Dodaj do zaktualizowanej listy
         }
     })
-    localStorage.setItem(LOC_STORAGE_SESSIONS_LIST,JSON.stringify(newSessionsList));
+    localStorage.setItem(LOC_STORAGE_SESSIONS_LIST,JSON.stringify(newSessionsList));    //Zapisz nową listę w bazie localStorage
 
-    const templateList = getTemplatesList();
-    const index = templateList.indexOf(templateList.find(template => template.name === templateToDeleteName));
-    templateList.splice(index,1);
-    localStorage.setItem(LOC_STORAGE_TEMPLATES_LIST,JSON.stringify(templateList));
+    const templateList = getTemplatesList();    //Pobierz wzory
+    const index = templateList.indexOf(templateList.find(template => template.name === templateToDeleteName));  //Znajdź indeks wzoru w oparciu o jego nazwę (jest unikalna)
+    templateList.splice(index,1);   //Usuń wzór z listy
+    localStorage.setItem(LOC_STORAGE_TEMPLATES_LIST,JSON.stringify(templateList));  //Zapisz zaktualizowaną listę
 
-    generateTemplates();
+    generateTemplates(); //Odśwież wzory na stronie
 }
 
-function openTemplateCreation(event){
+function openTemplateCreation(event){   //Metoda tworząca i otwierająca okno tworzenia/edycji wzoru
 
-    new WorkoutTemplate().generateWorkoutTemplateDialog();
+    const existingTemplateName = event.target.dataset.name; //Pobierz wartość atrybutu data-<wartość> z przycisku który wywołał tą metodę
 
-    const existingTemplateName = event.target.dataset.name;
+    if(existingTemplateName != null){   //Jeżeli jakaś wartość tam jest to oznacza że metodę wywołał przycisk edycji
+        new WorkoutTemplate().generateWorkoutTemplateDialog('Edit');    //Stwórz szkielet okna z odpowiednim trybem
 
-    if(existingTemplateName != null){
-        new WorkoutTemplate().generateWorkoutTemplateDialog('Edit');
+        const templatesList = getTemplatesList();   //Pobierz listę wzorów
+        let template = templatesList.find(template => template.name == existingTemplateName);   //Znajdź wzór do edycji
+        currentOpenedWorkoutTemplate = Object.assign(new WorkoutTemplate(),template);   //Zamień w obiekt odpowiedniej klasy i przypisz do zmiennej
+        currentOpenedWorkoutTemplate.loadDataIntoForm();    //Wywołaj metodę ładującą dane do formularza
 
-        const templatesList = getTemplatesList();
-        let template = templatesList.find(template => template.name == existingTemplateName);
-        currentOpenedWorkoutTemplate = Object.assign(new WorkoutTemplate(),template);
-        currentOpenedWorkoutTemplate.loadDataIntoForm();
+        editedTemplateIndex = templatesList.indexOf(template);  //Zapisz index edytowanego wzoru w celu zastąpienia
 
-        editedTemplateIndex = templatesList.indexOf(template);
-
-        const createTemplateForm = document.querySelector(".create-template-form");
-        createTemplateForm.addEventListener('submit',onTemplateEdition);
-    } else {
-        new WorkoutTemplate().generateWorkoutTemplateDialog('Create');
+        const createTemplateForm = document.querySelector(".create-template-form");     
+        createTemplateForm.addEventListener('submit',onTemplateEdition);    //W momencie wysłania formularza zostanie wywołana metoda zapisująca dane z formularza i nadpisująca istniejący wzór 
+    } else {    //Jeżeli nie ma wartości to metodę wywołał przycisk tworzenia nowej 
+        new WorkoutTemplate().generateWorkoutTemplateDialog('Create');  //Stwórz szkielet okna z odpowiednim trybem
 
         const createTemplateForm = document.querySelector(".create-template-form");
-        createTemplateForm.addEventListener('submit',onTemplateSubmission);
+        createTemplateForm.addEventListener('submit',onTemplateSubmission); //W momencie wysłania formularza zostanie wywołana metoda zapisująca dane z formularza jako nowy wzór
         
-        currentOpenedWorkoutTemplate = new WorkoutTemplate();
+        currentOpenedWorkoutTemplate = new WorkoutTemplate();   //Stworzenie nowego pustego formularza
     }
 
     const templateName = document.querySelector("#template-name");
