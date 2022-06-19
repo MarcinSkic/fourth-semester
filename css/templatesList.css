@@ -130,7 +130,7 @@ input::placeholder {
     width: 6rem;
 }
 
-.templates-container {
+.templates-container, .sessions-container {
     display: grid;
     grid-template-columns: repeat(auto-fill,minmax(200px,1fr));
     grid-auto-rows: 150px;
@@ -139,7 +139,7 @@ input::placeholder {
     justify-items: stretch;
 }
 
-.templates-container > div {
+.templates-container > div , .sessions-container > div {
     display: flex;
     flex-direction: column;
     justify-content: space-between;

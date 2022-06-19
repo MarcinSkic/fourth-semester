@@ -22,16 +22,16 @@ class WorkoutSession {
         dialog.innerHTML = 
         '<form class="create-session-form" method="dialog">' +
             `<h2>${mode} workout session</h2>`+
-            '<div class="session-header">'+
-                `<div>` +
-                    `<label for="pick-template">Name: </label>` +
-                    '<select name="pick-template" id="pick-template" required></select>'+
-                `</div>` +
-                `<div>` +
-                    `<label for="date">Date: </label>` +
-                    `<input type="date" name="date" id="date" required>` +
-                `</div>` +
-            '</div>'+
+            
+            `<div class='header-container'>` +
+                `<label for="pick-template">Name: </label>` +
+                '<select name="pick-template" id="pick-template" required></select>'+
+            `</div>` +
+            `<div class='header-container'>` +
+                `<label for="date">Date: </label>` +
+                `<input type="date" name="date" id="date" required>` +
+            `</div>` +
+
             `<div class="template-form">` +
             `</div>` +
             `<button type="submit">${mode} session</button>` +
