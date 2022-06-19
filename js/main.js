@@ -53,6 +53,20 @@ class WorkoutSession {
             pickTemplate.append(option);
         });
     }
+
+    generateWorkoutSession(){
+        const session = document.createElement('div');
+
+        const sessionTemplate = document.createElement('span');
+        sessionTemplate.textContent = this.template.name;
+
+        const sessionDate = document.createElement('span');
+        sessionDate.textContent = this.date;
+
+        session.append(sessionTemplate,sessionDate);
+
+        sessionsContainer.append(session);
+    }
 }
 
 class WorkoutTemplate{
@@ -348,9 +362,26 @@ function onTemplateCreationCancel(event){
 //SESSION-SITE-SECTION
 
 const logSessionButton = document.querySelector('.create-new-session-button');
-logSessionButton.addEventListener('click',openSessionCreation);
+const sessionsContainer = document.querySelector(".sessions-container");
+
+if(logSessionButton != null){
+    logSessionButton.addEventListener('click',openSessionCreation);
+}
 
 let currentOpenedSession;
+if(sessionsContainer != null){
+    generateSessions();
+}
+
+function generateSessions(){
+    sessionsContainer.innerHTML = "";
+
+    let sessionsList = getSessionsList();
+    sessionsList.forEach(session => {
+        session = Object.assign(new WorkoutSession(),session);
+        session.generateWorkoutSession();
+    });
+}
 
 function openSessionCreation(event){
     currentOpenedSession = new WorkoutSession();
@@ -401,10 +432,23 @@ function onSessionSubmission(event){
     currentOpenedSession.template = templateToSubmit;
     currentOpenedSession.date = date;
 
-    console.log(currentOpenedSession);
+    sessionsList = getSessionsList();
+    sessionsList.push(currentOpenedSession);
+    localStorage.setItem(LOC_STORAGE_SESSIONS_LIST,JSON.stringify(sessionsList));
+
+    generateSessions();
+    currentOpenedSession = null;
 }
 
 //USED-BY-EVERYONE
+function getSessionsList(){
+    let sessionsList = JSON.parse(localStorage.getItem(LOC_STORAGE_SESSIONS_LIST));
+
+    if(sessionsList == null) sessionsList = [];
+
+    return sessionsList;
+}
+
 function getTemplatesList(){
     let templatesList = JSON.parse(localStorage.getItem(LOC_STORAGE_TEMPLATES_LIST));
 

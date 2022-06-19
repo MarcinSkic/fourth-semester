@@ -15,6 +15,7 @@
 3. W sprawozdaniu wymagane są rozdziały o innowacyjności projektu, co podobało się autorowi, na jakie trudności natrafiono i jak je pokonano
 
 ## Zrealizowana zawartość
+- MVP (podpunkty: 1,2)
 
 ## Planowana zawartość
 ### MVP (Minimum Viable Product)
