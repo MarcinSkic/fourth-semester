@@ -76,7 +76,9 @@ class WorkoutSession {
         const deleteButton = document.createElement('button');
         deleteButton.textContent = "Delete";
         deleteButton.classList.add('delete');
-        deleteButton.dataset.name = this.name;
+        deleteButton.dataset.date = this.date;
+        
+        deleteButton.addEventListener('click',deleteSession);
 
         buttonsContainer.append(editButton,deleteButton);
 
@@ -196,6 +198,8 @@ class WorkoutTemplate{
         deleteButton.textContent = "Delete";
         deleteButton.classList.add('delete');
         deleteButton.dataset.name = this.name;
+
+        deleteButton.addEventListener('click',deleteTemplate);
 
         buttonsContainer.append(editButton,deleteButton);
 
@@ -350,6 +354,29 @@ function generateTemplates(){
         element = Object.assign(new WorkoutTemplate(),element);
         element.generateWorkoutTemplate();
     });
+}
+
+function deleteTemplate(event){
+    if(!window.confirm("Warning, this will delete all sessions based on this template!")){
+        return;
+    }
+    const templateToDeleteName = event.target.dataset.name;
+
+    let newSessionsList = [];
+    const sessionsList = getSessionsList();
+    sessionsList.forEach(session =>{
+        if(session.template.name !== templateToDeleteName){
+            newSessionsList.push(session);
+        }
+    })
+    localStorage.setItem(LOC_STORAGE_SESSIONS_LIST,JSON.stringify(newSessionsList));
+
+    const templateList = getTemplatesList();
+    const index = templateList.indexOf(templateList.find(template => template.name === templateToDeleteName));
+    templateList.splice(index,1);
+    localStorage.setItem(LOC_STORAGE_TEMPLATES_LIST,JSON.stringify(templateList));
+
+    generateTemplates();
 }
 
 function openTemplateCreation(event){
@@ -580,6 +607,17 @@ function openSessionCreation(event){
     dateInput.addEventListener('input',onDateChange);
 
     dialog.showModal();
+}
+
+function deleteSession(event){
+    const sessionToDeleteDate = event.target.dataset.date;
+
+    const sessionList = getSessionsList();
+    const index = sessionList.indexOf(sessionList.find(session => session.date === sessionToDeleteDate));
+    
+    sessionList.splice(index,1);
+    localStorage.setItem(LOC_STORAGE_SESSIONS_LIST,JSON.stringify(sessionList));
+    generateSessions();
 }
 
 function onSessionEdition(){
