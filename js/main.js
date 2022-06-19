@@ -390,97 +390,26 @@ function openTemplateCreation(event){   //Metoda tworząca i otwierająca okno t
         currentOpenedWorkoutTemplate = new WorkoutTemplate();   //Stworzenie nowego pustego formularza
     }
 
-    const templateName = document.querySelector("#template-name");
-    templateName.addEventListener('input',onTemplateNameChange);
+    const templateName = document.querySelector("#template-name");  
+    templateName.addEventListener('input',onTemplateNameChange);    //Przy wprowadzaniu nazwy wzoru wywołaj metodę walidującą nazwę (agresywnie, przy każdej wprowadzonej lub usuniętej literce)
     
     const addTemplateField = document.querySelector(".add-field-button");
-    addTemplateField.addEventListener('click',tryCreatingTemplateField);
+    addTemplateField.addEventListener('click',tryCreatingTemplateField);    //Przy próbie dodania nowego pola wywołaj metodę walidującą poprawność
 
     const submitButton = document.querySelector("[type='submit']");
-    submitButton.addEventListener('click',tryTemplateSubmission);
+    submitButton.addEventListener('click',tryTemplateSubmission);   //Przy wciśnięciu przycisku wysyłającego formularz waliduj poprawność formularza
 
-    dialog.addEventListener('cancel',onTemplateCreationCancel);
+    dialog.addEventListener('cancel',onTemplateCreationCancel); //Przy próbie zrezygnowania (zamknięcia okna) upewnij się czy tego chce użytkownik
 
-    dialog.showModal();
+    dialog.showModal(); //Wyświetl wygenerowane okno
 }
 
-function onTemplateEdition(event){
-    let templateName = document.querySelector('#template-name');
-    let templatePlace = document.querySelector('#place');
-
-    currentOpenedWorkoutTemplate.name = templateName.value;
-    currentOpenedWorkoutTemplate.place = templatePlace.value;
-
-    templatesList = getTemplatesList();
-
-    templatesList[editedTemplateIndex] = currentOpenedWorkoutTemplate;
-
-    localStorage.setItem(LOC_STORAGE_TEMPLATES_LIST,JSON.stringify(templatesList));
-
-    generateTemplates();
-    currentOpenedWorkoutTemplate = null;
-    editedTemplateIndex = -1;
-}
-
-function onTemplateNameChange(event){
-    templatesList = getTemplatesList();
-    if(event.target.value.includes(' ')){
-        event.target.setCustomValidity("Template name can't contain white space");
-        return;
-    } else {
-        event.target.setCustomValidity("");
-    }
-
-    if(templatesList.find(element => element.name === event.target.value)){
-        event.target.setCustomValidity("There already exists template with that name");
-        return
-    } else {
-        event.target.setCustomValidity("");
-    }
-}
-
-
-function tryCreatingTemplateField(){
-    const fieldName = document.querySelector("[name='field-name']");
-    const fieldType = document.querySelector("[name='field-type']");
-    const fieldsContainer = document.querySelector(".fields-list"); //Znajdź element przechowujący wszystkie pola
-
-    if(!fieldName.value || !fieldType.value){
-        fieldName.setCustomValidity("Field name can't be empty");
-        fieldName.reportValidity();
-        return;
-    } else {
-        fieldName.setCustomValidity("");
-    }
-
-    if(fieldName.value.includes(' ')){
-        fieldName.setCustomValidity("Field name can't contain white spaces");
-        fieldName.reportValidity();
-        return;
-    } else {
-        fieldName.setCustomValidity("");
-    }
-
-    if(currentOpenedWorkoutTemplate.fields.find(element => element.name === fieldName.value)){
-        fieldName.setCustomValidity("Already exists field with that name");
-        fieldName.reportValidity();
-        return;
-    } else {
-        fieldName.setCustomValidity("");
-    }
-
-    newWorkoutField = new WorkoutField(fieldName.value,fieldType.value);
-    newWorkoutField.generateWorkoutField(fieldsContainer,true,false);
-
-    currentOpenedWorkoutTemplate.addField(newWorkoutField);
-}
-
-function tryTemplateSubmission(event){
-    const field = document.querySelector("[name='field-name']");
-    if(currentOpenedWorkoutTemplate.fields.length === 0){
-        field.setCustomValidity("Template must have at least one field");
+function tryTemplateSubmission(event){  //Sprawdzenie formularza przed stworzeniem wzoru
+    const field = document.querySelector("[name='field-name']");    //Pobierz element formularza do nazywania wzoru
+    if(currentOpenedWorkoutTemplate.fields.length === 0){   //Jeżeli wzór nie ma żadnego pola
+        field.setCustomValidity("Template must have at least one field");   //Zgłoś potrzebę stworzenia pola
         if(field.value){
-            field.setCustomValidity("Template must have at least one field (click '+' button to add)");
+            field.setCustomValidity("Template must have at least one field (click '+' button to add)"); //Jeżeli pole ma nadaną nazwę to zzostaje zakomunikowane co użytkownik musi zrobić żeby go dodać
         }
         return;
     } else {
@@ -488,8 +417,26 @@ function tryTemplateSubmission(event){
     }
 }
 
-function onTemplateSubmission(event){
+function onTemplateSubmission(event){   //Metoda zapisująca dane z pól formularza jako nowy wzór
 
+    let templateName = document.querySelector('#template-name');    //Zapisz nazwę i miejsce do wzoru
+    let templatePlace = document.querySelector('#place');
+    currentOpenedWorkoutTemplate.name = templateName.value;
+    currentOpenedWorkoutTemplate.place = templatePlace.value;
+
+    //Nie ma potrzeby zapisywania pól, są one dopisywane w momencie ich tworzenia
+
+    templatesList = getTemplatesList(); //Pobierz listę istniejących wzorów
+
+    templatesList.push(currentOpenedWorkoutTemplate);   //Dodaj nowy
+
+    localStorage.setItem(LOC_STORAGE_TEMPLATES_LIST,JSON.stringify(templatesList)); //Zapisz
+
+    generateTemplates();    //Odśwież wzory na stronie
+    currentOpenedWorkoutTemplate = null;    //Żaden wzór nie jest już edytowany
+}
+
+function onTemplateEdition(event){  //Metoda identyczna jak powyżej, nie licząc:
     let templateName = document.querySelector('#template-name');
     let templatePlace = document.querySelector('#place');
 
@@ -498,39 +445,97 @@ function onTemplateSubmission(event){
 
     templatesList = getTemplatesList();
 
-    templatesList.push(currentOpenedWorkoutTemplate);
+    templatesList[editedTemplateIndex] = currentOpenedWorkoutTemplate;  //Wzór jest nadpisywany nowym zedytowanym wzorem
 
     localStorage.setItem(LOC_STORAGE_TEMPLATES_LIST,JSON.stringify(templatesList));
 
     generateTemplates();
     currentOpenedWorkoutTemplate = null;
+    editedTemplateIndex = null;   //Żaden wzór nie jest edytowany, indeks usuwany
 }
 
-function onTemplateCreationCancel(event){
-    if(currentOpenedWorkoutTemplate.fields.length !== 0){
-        if(!window.confirm("Are you sure you want to cancel edition of this template?")){
-            event.preventDefault();
+function onTemplateNameChange(event){   //Przy każdej zmianie nazwy (nawet bez opuszczenia okna) ustaw walidację
+    
+    if(event.target.value.includes(' ')){   //Jeżeli nazwa wzoru zawiera spację
+        event.target.setCustomValidity("Template name can't contain white space");  //Ustaw komunikat walidacji dla HTML, nie pozwoli wysłać formularza dopóki ten komunikat ma jakąkolwiek wartość inną niż pusty/
+        return;
+    } else {
+        event.target.setCustomValidity(""); //Jeżeli OK nie ma komunikatu
+    }
+
+    templatesList = getTemplatesList(); //Pobierz listę istniejących wzorów
+
+    if(templatesList.find(element => element.name === event.target.value)){ //Jeżeli istnieje wzór o tej nazwie
+        event.target.setCustomValidity("There already exists template with that name"); //Ustaw komunikat, wzory muszą mieć unikatową nazwę
+        return
+    } else {
+        event.target.setCustomValidity("");
+    }
+}
+
+
+function tryCreatingTemplateField(){    //Metoda walidująca w momencie próby stworzenia pola
+    const fieldName = document.querySelector("[name='field-name']");    //Pobierz dane na temat pola
+    const fieldType = document.querySelector("[name='field-type']");
+
+    const fieldsContainer = document.querySelector(".fields-list"); //Znajdź element przechowujący wszystkie pola
+
+    if(!fieldName.value || !fieldType.value){   //Jeżeli jakaś wartość pola jest pusta
+        fieldName.setCustomValidity("Field name can't be empty");   //Ustaw komunikat
+        fieldName.reportValidity(); //Zgłoszenie użytkownikowi problemu od razu, bez czekania na próbę wysłania formularza
+        return;
+    } else {
+        fieldName.setCustomValidity("");
+    }
+
+    if(fieldName.value.includes(' ')){   //Jeżeli nazwa pola zawiera spację (nazwa ta jest używana jako id dla etykiet, nie może jej zawierać)
+        fieldName.setCustomValidity("Field name can't contain white spaces"); //Ustaw komunikat
+        fieldName.reportValidity(); //Zgłoszenie
+        return;
+    } else {
+        fieldName.setCustomValidity("");
+    }
+
+    if(currentOpenedWorkoutTemplate.fields.find(element => element.name === fieldName.value)){  //Jeżeli istniej pole o takiej nazwie (muszą być unikalne)
+        fieldName.setCustomValidity("Already exists field with that name"); //Ustaw komunikat
+        fieldName.reportValidity();
+        return;
+    } else {
+        fieldName.setCustomValidity("");
+    }
+
+    //Jeżeli walidacja przeszła pomyślnie to stwórz pole z tych wartości i wygeneruj je w formularzu
+    newWorkoutField = new WorkoutField(fieldName.value,fieldType.value);
+    newWorkoutField.generateWorkoutField(fieldsContainer,true,false);
+
+    currentOpenedWorkoutTemplate.addField(newWorkoutField); //Dodanie stworzonego pola do tworzonego/edytowanego wzoru
+}
+
+function onTemplateCreationCancel(event){   //Przy próbie wyjścia z okna
+    if(currentOpenedWorkoutTemplate.fields.length !== 0){   //Jeżeli użytkownik ma już jakieś pola stworzone
+        if(!window.confirm("Are you sure you want to cancel edition of this template?")){   //Zapytaj użytkownika czy na pewno chce porzucić edycję
+            event.preventDefault(); //Anuluj dalsze operacje tego zdarzenia, w tym wypadku zamknięcie okna
         }
     }
-    currentOpenedWorkoutTemplate = null;
+    currentOpenedWorkoutTemplate = null;    //Jeżeli edycja zostanie porzucona to edytowany wzór zostaje wyzerowany
 }
 
 //SESSION-SITE-SECTION
 
-const logSessionButton = document.querySelector('.create-new-session-button');
+const logSessionButton = document.querySelector('.create-new-session-button');  
 const sessionsContainer = document.querySelector(".sessions-container");
 
 if(logSessionButton != null){
     logSessionButton.addEventListener('click',openSessionCreation);
 }
 
-let currentOpenedSession;
-let editedSessionIndex = -1;
+let currentOpenedSession;   //Aktualnie edytowana sesja
+let editedSessionIndex = -1;    //Indeks edytowanej sesji
 if(sessionsContainer != null){
     generateSessions();
 }
 
-function generateSessions(){
+function generateSessions(){    //Wygeneruj sesję, identycznie jak przy wzorach
     sessionsContainer.innerHTML = "";
 
     let sessionsList = getSessionsList();
@@ -539,30 +544,9 @@ function generateSessions(){
         session.generateWorkoutSession();
     });
 }
-    /*
-    const existingTemplateName = event.target.dataset.name;
 
-    if(existingTemplateName != null){
-        new WorkoutTemplate().generateWorkoutTemplateDialog('Edit');
-
-        const templatesList = getTemplatesList();
-        let template = templatesList.find(template => template.name === existingTemplateName);
-        currentOpenedWorkoutTemplate = Object.assign(new WorkoutTemplate(),template);
-        currentOpenedWorkoutTemplate.loadDataIntoForm();
-
-        editedTemplateIndex = templatesList.indexOf(template);
-
-        const createTemplateForm = document.querySelector(".create-template-form");
-        createTemplateForm.addEventListener('submit',onTemplateEdition);
-    } else {
-        new WorkoutTemplate().generateWorkoutTemplateDialog('Create');
-
-        const createTemplateForm = document.querySelector(".create-template-form");
-        createTemplateForm.addEventListener('submit',onTemplateSubmission);
-    }*/
-
-function openSessionCreation(event){
-    const existingSessionDate = event.target.dataset.date;
+function openSessionCreation(event){    //Otwórz okno edycji sesji, podobnie jak przy wzorach, znaczące różnice:
+    const existingSessionDate = event.target.dataset.date;  //Unikatowa wartość sesji to data, nie nazwa
 
     if(existingSessionDate != null) {
         new WorkoutSession().generateWorkoutSessionDialog('Edit');
@@ -584,27 +568,55 @@ function openSessionCreation(event){
         currentOpenedSession = new WorkoutSession();
     }
 
+    //Nie ma potrzeby przeprowadzania tylu walidacji przez javascript, mniej metod z tym związanych
+
     const pickTemplate = document.querySelector('#pick-template');
-    pickTemplate.addEventListener('input',tryGeneratingWorkoutForm);
+    pickTemplate.addEventListener('input',tryGeneratingWorkoutForm);    //Metoda aktualizująca wyświetlany formularz w zależności od wybranego wzoru
 
     const dateInput = document.querySelector('#date');
-    dateInput.addEventListener('input',onDateChange);
+    dateInput.addEventListener('input',onDateChange);   //Logika podobna jak przy zmianie nazwy we wzorze, data zostaje sprawdzona czy inna sesja już jej nie ma
 
-    dialog.showModal();
+    dialog.showModal(); //Otwórz okno
 }
 
-function deleteSession(event){
-    const sessionToDeleteDate = event.target.dataset.date;
+function onSessionSubmission(event){    //Metoda zapisująca wypełniony formularz jako sesję w localStorage
+    const pickTemplate = document.querySelector('#pick-template');  //Znalezienie nazwy wybranego wzoru
+    const templateName = getSelectOptionName(pickTemplate);
 
-    const sessionList = getSessionsList();
-    const index = sessionList.indexOf(sessionList.find(session => session.date === sessionToDeleteDate));
-    
-    sessionList.splice(index,1);
-    localStorage.setItem(LOC_STORAGE_SESSIONS_LIST,JSON.stringify(sessionList));
-    generateSessions();
+    const templatesList = getTemplatesList();   //Pobierz wszystkie wzory
+    let templateToSubmit = templatesList.find(template => template.name === templateName);  //Znajdź wybrany wzór na podstawie jego nazwy
+
+    templateToSubmit.fields.forEach(field => {  //Dla każdego pola w formularzu
+        const fieldsInputs = document.querySelectorAll(`[data-name="${field.name}"] input`);    //Znajdź części tego pola
+
+        values = {};    //Stwórz obiekt przechowujący wartości pola
+        fieldsInputs.forEach(fieldInput => {    //Dla każdej części pola
+            let type = fieldInput.id.replace('-'+field.name,'');;   //Określ typ pola na podstawie jego id, po odcięciu nazwy pola
+            if(type.includes('checkbox')){  //Jeżeli pole jest typu checkbox
+                values[type] = fieldInput.checked;  //Pobrana zostaje informacja czy jest wciśniety
+            } else {
+                values[type] = fieldInput.value;    //W innym wypadku jego wartość
+            }
+        });
+        
+        field.values = values;  //Zapisz do pola wartości jego części
+    });
+
+    let date = document.querySelector('#date').value;   //Pobranie wartości daty
+
+    currentOpenedSession.template = templateToSubmit;   //Zapisanie pobranych danych do sesji
+    currentOpenedSession.date = date;
+
+     //Zapisanie stworzonej sesji do localStorage
+    sessionsList = getSessionsList();  
+    sessionsList.push(currentOpenedSession);
+    localStorage.setItem(LOC_STORAGE_SESSIONS_LIST,JSON.stringify(sessionsList));
+
+    generateSessions(); //Odśwież wyświetlone sesje
+    currentOpenedSession = null;    //Wyczyszczenie zmiennej, żadna sesja nie jest edytowana
 }
 
-function onSessionEdition(){
+function onSessionEdition(){    //Metoda prawie identyczna jak powyżej, znaczące różnice:
     const pickTemplate = document.querySelector('#pick-template');
     const templateName = getSelectOptionName(pickTemplate);
 
@@ -633,14 +645,15 @@ function onSessionEdition(){
     currentOpenedSession.date = date;
 
     sessionsList = getSessionsList();
-    sessionsList[editedSessionIndex] = currentOpenedSession;
+    sessionsList[editedSessionIndex] = currentOpenedSession;    //Sesja zostaje nadpisana w liście
     localStorage.setItem(LOC_STORAGE_SESSIONS_LIST,JSON.stringify(sessionsList));
 
     generateSessions();
     currentOpenedSession = null;
+    editedSessionIndex = null;  //Wyczyszczenie indeksu, żadna sesja nie jest edytowana
 }
 
-function onDateChange(event){
+function onDateChange(event){   //Metoda sprawdzająca czy data sesji jest unikatowa
     let sessionList = getSessionsList();
 
     if(sessionList.find(element => element.date === event.target.value)){
@@ -650,60 +663,36 @@ function onDateChange(event){
     }
 }
 
-function tryGeneratingWorkoutForm(event){
-    let workoutTemplate = getTemplatesList().find(element => element.name === getSelectOptionName(event.target));
+function tryGeneratingWorkoutForm(event){   //Metoda aktualizująca formularz sesji w oparciu o wzór
+    let workoutTemplate = getTemplatesList().find(element => element.name === getSelectOptionName(event.target)); //Znalezienie wzoru w oparciu o nazwę 
 
-    workoutTemplate = Object.assign(new WorkoutTemplate(),workoutTemplate);
-
+    workoutTemplate = Object.assign(new WorkoutTemplate(),workoutTemplate); //Zamiana wzoru w obiekt klasy i wywołanie metody generującej
     workoutTemplate.generateWorkoutForm();
 }
 
-function onSessionSubmission(event){
-    const pickTemplate = document.querySelector('#pick-template');
-    const templateName = getSelectOptionName(pickTemplate);
+function deleteSession(event){  //Metoda usuwająca sesję
+    const sessionToDeleteDate = event.target.dataset.date;  //Data sesji do usunięcia w oparciu o data-<wartość> wciśniętego przycisku
 
-    const templatesList = getTemplatesList();
-    let templateToSubmit = templatesList.find(template => template.name === templateName);
-
-    templateToSubmit.fields.forEach(field => {
-        const fieldsInputs = document.querySelectorAll(`[data-name="${field.name}"] input`);
-
-        values = {};
-        fieldsInputs.forEach(fieldInput => {
-            let type = fieldInput.id.replace('-'+field.name,'');;
-            if(type.includes('checkbox')){
-                values[type] = fieldInput.checked;
-            } else {
-                values[type] = fieldInput.value;
-            }
-        });
-        
-        field.values = values;
-    });
-
-    let date = document.querySelector('#date').value;
-
-    currentOpenedSession.template = templateToSubmit;
-    currentOpenedSession.date = date;
-
-    sessionsList = getSessionsList();
-    sessionsList.push(currentOpenedSession);
-    localStorage.setItem(LOC_STORAGE_SESSIONS_LIST,JSON.stringify(sessionsList));
-
-    generateSessions();
-    currentOpenedSession = null;
+    const sessionList = getSessionsList();  //Pobranie aktualnych sesji
+    const index = sessionList.indexOf(sessionList.find(session => session.date === sessionToDeleteDate));   //Znalezienie indeksu sesji
+    
+    sessionList.splice(index,1);    //Usunięcie sesji
+    localStorage.setItem(LOC_STORAGE_SESSIONS_LIST,JSON.stringify(sessionList));    //Zapisanie nowej listy do localStorage
+    generateSessions(); //Odświeżenie wyświetlania
 }
+
+
 
 //USED-BY-EVERYONE
-function getSessionsList(){
-    let sessionsList = JSON.parse(localStorage.getItem(LOC_STORAGE_SESSIONS_LIST));
+function getSessionsList(){ //Pobierz listę sesji z local storage
+    let sessionsList = JSON.parse(localStorage.getItem(LOC_STORAGE_SESSIONS_LIST)); //Pobierz item z localStorage na podstawie klucza i z JSON przekonwertuj do listy obiektów
 
-    if(sessionsList == null) sessionsList = [];
+    if(sessionsList == null) sessionsList = []; //Jeżeli localStorage nie zawiera listy pod tym kluczem to stwórz pustą listę
 
-    return sessionsList;
+    return sessionsList;    //Zwróc listę sesji
 }
 
-function getTemplatesList(){
+function getTemplatesList(){    //Zasada identyczna jak powyżej
     let templatesList = JSON.parse(localStorage.getItem(LOC_STORAGE_TEMPLATES_LIST));
 
     if(templatesList == null) templatesList = [];
@@ -711,10 +700,10 @@ function getTemplatesList(){
     return templatesList;
 }
 
-function getSelectOptionName(select){
+function getSelectOptionName(select){   //Znajdź nazwę zaznaczonej opcji w elemencie typu <select> i ją zwróc
     return select.options[select.selectedIndex].text;
 }
 
-function capitalizeFirstLetter(string){
+function capitalizeFirstLetter(string){ //Zwrócenie podanego łańcucha znaków z dużej litery
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
