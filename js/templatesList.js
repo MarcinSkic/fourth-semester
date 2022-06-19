@@ -127,6 +127,8 @@ currentOpenedWorkoutTemplate = new WorkoutTemplate();
 generateTemplates();
 
 function generateTemplates(){
+    templatesContainer.innerHTML = "";
+    
     let templatesList = getTemplatesList();
     console.log(templatesList);
     templatesList.forEach(element => {
@@ -166,6 +168,9 @@ function openTemplateCreation(event){
     currentOpenedWorkoutTemplate = new WorkoutTemplate();
     currentOpenedWorkoutTemplate.generateWorkoutTemplateDialog();
 
+    const submitButton = document.querySelector("[type='submit']");
+    submitButton.addEventListener('click',tryTemplateSubmission);
+
     const createTemplateForm = document.querySelector(".create-template-form");
     createTemplateForm.addEventListener('submit',onTemplateSubmission);
 
@@ -173,7 +178,7 @@ function openTemplateCreation(event){
     addTemplateField.addEventListener('click',tryCreatingTemplateField);
 
     const templateName = document.querySelector("#template-name");
-    templateName.addEventListener('change',onTemplateNameChange);
+    templateName.addEventListener('input',onTemplateNameInstantChange);
 
     dialog.addEventListener('cancel',onTemplateCreationCancel);
 
@@ -181,15 +186,20 @@ function openTemplateCreation(event){
 }
 
 function tryCreatingTemplateField(){
-    let fieldName = document.querySelector("[name='field-name']").value;
-    let fieldType = document.querySelector("[name='field-type']").value;
+    const fieldName = document.querySelector("[name='field-name']");
+    const fieldType = document.querySelector("[name='field-type']");
 
-    if(!fieldName || !fieldType){
-        alert('empty!');
+    if(!fieldName.value || !fieldType.value){
+        fieldName.setCustomValidity("Field name can't be empty");
+        fieldName.reportValidity();
         return;
+    } else {
+        fieldName.setCustomValidity("");
     }
 
-    newWorkoutField = new WorkoutField(fieldName,fieldType);
+     
+
+    newWorkoutField = new WorkoutField(fieldName.value,fieldType.value);
     newWorkoutField.generateNewWorkoutField();
 
     currentOpenedWorkoutTemplate.addField(newWorkoutField);
@@ -200,18 +210,35 @@ function onTemplateNameChange(event){
 
     if(templatesList.find(element => element.name === event.target.value)){
         event.target.setCustomValidity("There already exists template with that name");
-    } else {
-        event.target.setCustomValidity("");
+        event.target.addEventListener('input',onTemplateNameInstantChange);
     }
     //TODO: Add CSS warning that this name is taken
 }
 
-function onTemplateSubmission(event){
-    if(currentOpenedWorkoutTemplate.fields.length === 0){
-        alert("Template must have at least one field");
-        event.preventDefault();
-        return;
+function onTemplateNameInstantChange(event){
+    templatesList = getTemplatesList();
+
+    if(templatesList.find(element => element.name === event.target.value)){
+        event.target.setCustomValidity("There already exists template with that name");
+    } else {
+        event.target.setCustomValidity("");
     }
+}
+
+function tryTemplateSubmission(event){
+    const field = document.querySelector("[name='field-name']");
+    if(currentOpenedWorkoutTemplate.fields.length === 0){
+        field.setCustomValidity("Template must have at least one field");
+        if(field.value){
+            field.setCustomValidity("Template must have at least one field (click '+' button to add)");
+        }
+        return;
+    } else {
+        field.setCustomValidity("");
+    }
+}
+
+function onTemplateSubmission(event){
 
     let templateName = document.querySelector('#template-name');
     let templatePlace = document.querySelector('#place');
@@ -225,6 +252,7 @@ function onTemplateSubmission(event){
 
     localStorage.setItem(LOC_STORAGE_TEMPLATES_LIST,JSON.stringify(templatesList));
 
+    generateTemplates();
     currentOpenedWorkoutTemplate = null;
 }
 
