@@ -25,17 +25,28 @@ class WorkoutSession {
             '<div class="session-header">'+
                 `<div>` +
                     `<label for="pick-template">Name: </label>` +
-                    '<select name="pick-template" id="pick-template" required></select>'
+                    '<select name="pick-template" id="pick-template" required></select>'+
                 `</div>` +
                 `<div>` +
                     `<label for="date">Date: </label>` +
                     `<input type="date" name="date" id="date" required>` +
                 `</div>` +
-            '</div>'
+            '</div>'+
             `<div class="template-form">` +
             `</div>` +
             `<button type="submit">Log session</button>` +
         `</form>`;
+        
+        const pickTemplate = document.querySelector('#pick-template');
+        const templatesList = getTemplatesList();
+
+        templatesList.forEach(element => {
+            let option = document.createElement('option');
+            option.setAttribute('value',element.name);
+            option.textContent = element.name;
+
+            pickTemplate.append(option);
+        });
     }
 }
 
@@ -67,7 +78,8 @@ class WorkoutTemplate{
                 `<option value="Gym">Gym</option>` +
             `</datalist>` +
             `<div class="fields-list">` +
-                `<div class="add-new-field">` +
+            `</div>` +
+            `<div class="add-new-field">` +
                     `<input type="text" name="field-name" placeholder="Field Name">` +
                     `<div class="field-options">` +
                         `<select name="field-type" id="">` +
@@ -79,7 +91,6 @@ class WorkoutTemplate{
                         `<button type="button" class="add-field-button">+</button>` +
                     `</div>` +
                 `</div>` +
-            `</div>` +
             `<button type="submit">Create template</button>` +
         `</form>`;
     }
@@ -97,6 +108,35 @@ class WorkoutTemplate{
 
         templatesContainer.append(template);
     }
+
+    generateWorkoutForm(){
+        const templateForm = document.querySelector('.template-form');
+
+        templateForm.innerHTML = '';
+
+        const templateName = document.createElement('span');
+        templateName.textContent = this.name;
+
+        const templatePlace = document.createElement('span');
+        templatePlace.textContent = this.place;
+
+        templateForm.append(templateName,templatePlace);
+
+        const templateFormContainer = document.createElement('div');
+        templateFormContainer.classList.add('template-form-container');
+
+        templateForm.append(templateFormContainer);
+
+        this.fields.forEach(field => {
+            field = Object.assign(new WorkoutField(),field);
+            console.log(field);
+            field.generateWorkoutField(templateFormContainer,false,true);
+        })
+
+        
+
+        console.log("hej my name is " + this.name);
+    }
 }
 
 class WorkoutField{
@@ -106,7 +146,7 @@ class WorkoutField{
     }
 
     //W tej i innych pokrewnych metodach nie używam innerHTML ponieważ użytkownik wprowadza dane, co grozi HTML injection
-    generateWorkoutField(isDisabled,isRequired){
+    generateWorkoutField(whereToAppend,isDisabled,isRequired){
         let newField = document.createElement('div');   //Stworzenie elementu (jeszcze nie istnieje w DOM strony) i dodanie klasy
         newField.classList.add("template-field");
 
@@ -117,27 +157,25 @@ class WorkoutField{
         newField.appendChild(span); //Dodanie elementu span jako dziecka
 
         if(this.type.includes("sets-and-reps")){    //Jeżeli typ pola zawiera nazwę "sets-and-reps"
-            newField.appendChild(this.generateNumberPart('sets',this.name,isDisabled,isRequired));    //Dodaj elementy
-            newField.appendChild(this.generateNumberPart('reps',this.name,isDisabled,isRequired));
+            newField.appendChild(this.createNumberPart('sets',this.name,isDisabled,isRequired));    //Dodaj elementy
+            newField.appendChild(this.createNumberPart('reps',this.name,isDisabled,isRequired));
             if(this.type === "sets-and-reps-with-weight"){  //Jeżeli jest równe temu typowi
-                newField.appendChild(this.generateNumberPart('weight',this.name,isDisabled,isRequired));  //Dodaj kolejny element
+                newField.appendChild(this.createNumberPart('weight',this.name,isDisabled,isRequired));  //Dodaj kolejny element
             }
         }
         
         if(this.type === 'checkbox'){
-            newField.appendChild(this.generateCheckboxPart('checkbox',this.name,isDisabled,isRequired));
+            newField.appendChild(this.createCheckboxPart('checkbox',this.name,isDisabled,isRequired));
         }
 
         if(this.type === 'numerical'){
-            newField.appendChild(this.generateNumberPart('numerical',this.name,isDisabled,isRequired));
+            newField.appendChild(this.createNumberPart('numerical',this.name,isDisabled,isRequired));
         }
-
-        const addNewField = document.querySelector(".add-new-field");   //Znajdź element tworzenia nowych pól, żeby dodawać pola przed nim
-        const fieldsContainer = document.querySelector(".fields-list"); //Znajdź element przechowujący wszystkie pola
-        fieldsContainer.insertBefore(newField,addNewField); //Dodaj nowe pole przed elementem tworzącym pola
+        
+        whereToAppend.append(newField); //Dodaj nowe pole przed elementem tworzącym pola
     }
 
-    generateNumberPart(category,name,isDisabled,isRequired){
+    createNumberPart(category,name,isDisabled,isRequired){
         let label = document.createElement('label');
         let input = document.createElement('input');
     
@@ -146,7 +184,7 @@ class WorkoutField{
         
         input.setAttribute('type','number');
         input.setAttribute('name',`${category}-${name}`);
-        input.setAttribute('id',`${category}-${name}`)
+        input.setAttribute('id',`${category}-${name}`);
         input.disabled = isDisabled;
         input.required = isRequired;
     
@@ -162,7 +200,7 @@ class WorkoutField{
         return container;
     }
 
-    generateCheckboxPart(category,name,isDisabled,isRequired){
+    createCheckboxPart(category,name,isDisabled,isRequired){
         let input = document.createElement('input');
         
         input.setAttribute('type','checkbox');
@@ -176,22 +214,22 @@ class WorkoutField{
         container.append(input);
         return container;
     }
-
-    generateWorkoutFieldTitle(){
-
-    }
 }
+
 const dialog = document.querySelector("dialog");
 
 const addTemplateButton = document.querySelector(".create-new-template-button");
 const templatesContainer = document.querySelector(".templates-container");
 
-addTemplateButton.addEventListener('click',openTemplateCreation);
+if(addTemplateButton != null){  //TODO fix if splitted to different scripts
+    addTemplateButton.addEventListener('click',openTemplateCreation);
+}
 
 const LOC_STORAGE_TEMPLATES_LIST = 'templatesList';
+const LOC_STORAGE_SESSIONS_LIST = 'sessionsList';
 
 currentOpenedWorkoutTemplate = new WorkoutTemplate();
-if(templatesContainer != null){
+if(templatesContainer != null){ //TODO fix if splitted to different scripts
     generateTemplates();
 }
 
@@ -242,6 +280,7 @@ function onTemplateNameChange(event){
 function tryCreatingTemplateField(){
     const fieldName = document.querySelector("[name='field-name']");
     const fieldType = document.querySelector("[name='field-type']");
+    const fieldsContainer = document.querySelector(".fields-list"); //Znajdź element przechowujący wszystkie pola
 
     if(!fieldName.value || !fieldType.value){
         fieldName.setCustomValidity("Field name can't be empty");
@@ -252,7 +291,7 @@ function tryCreatingTemplateField(){
     }
 
     newWorkoutField = new WorkoutField(fieldName.value,fieldType.value);
-    newWorkoutField.generateWorkoutField(true,false);
+    newWorkoutField.generateWorkoutField(fieldsContainer,true,false);
 
     currentOpenedWorkoutTemplate.addField(newWorkoutField);
 }
@@ -307,4 +346,29 @@ function getTemplatesList(){
 
 function capitalizeFirstLetter(string){
     return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+//SESSION-SITE-SECTION
+
+const logSessionButton = document.querySelector('.create-new-session-button');
+logSessionButton.addEventListener('click',openSessionCreation);
+
+let currentOpenedSession;
+
+function openSessionCreation(event){
+    currentOpenedSession = new WorkoutSession();
+    currentOpenedSession.generateWorkoutSessionDialog();
+
+    const pickTemplate = document.querySelector('#pick-template');
+    pickTemplate.addEventListener('input',tryGeneratingWorkoutForm)
+
+    dialog.showModal();
+}
+
+function tryGeneratingWorkoutForm(event){
+    let workoutTemplate = getTemplatesList().find(element => element.name === event.target.options[event.target.selectedIndex].text);
+
+    workoutTemplate = Object.assign(new WorkoutTemplate(),workoutTemplate);
+
+    workoutTemplate.generateWorkoutForm();
 }
