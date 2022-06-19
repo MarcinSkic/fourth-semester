@@ -146,12 +146,12 @@ class WorkoutTemplate{
         dialog.innerHTML = 
         '<form class="create-template-form" method="dialog">' +
             `<h2>${mode} workout template</h2>`+
-            `<div>` +
-                `<label for="template-name">Name: </label>` +
+            `<div class="header-container">` +
+                `<label for="template-name">Name</label>` +
                 `<input type="text" name="template-name" id="template-name" placeholder="What is it, when is it?" required>` +
             `</div>` +
-            `<div>` +
-                `<label for="place">Place: </label>` +
+            `<div class="header-container">` +
+                `<label for="place">Place</label>` +
                 `<input type="text" name="place" id="place" list="places" placeholder="Optional">` +
             `</div>` +
             `<datalist id="places">` +
@@ -178,14 +178,17 @@ class WorkoutTemplate{
     generateWorkoutTemplate(){
         const template = document.createElement('div');
 
-        const templateName = document.createElement('span');
+        const templateName = document.createElement('div');
+        templateName.classList.add('template-element-name');
         templateName.textContent = this.name;
 
-        const templatePlace = document.createElement('span');
+        const templatePlace = document.createElement('div');
+        templatePlace.classList.add('template-element-place');
         templatePlace.textContent = this.place;
 
 
         const buttonsContainer = document.createElement('div');
+        buttonsContainer.classList.add('template-element-buttons');
 
         const editButton = document.createElement('button');
         editButton.textContent = "Edit";

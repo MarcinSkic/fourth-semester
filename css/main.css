@@ -1,6 +1,114 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+h1, ul{
+    margin: 0;
+}
+
+h1 {
+    padding: 5px;
+}
+
+body {
+    text-align: center;
+    font-family: 'Roboto', Arial, Helvetica, sans-serif
+}
+header {
+    background-color: #2d6e20;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+
+    box-shadow: 0px 0px 5px 2px #2a46248f;
+}
+
+header *:any-link {
+    text-decoration: none;
+    color: aliceblue;
+}
+
+nav {
+    padding: 0 10px;
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    
+}
+
+nav ul {
+    height: 100%;
+
+    list-style-type: none;
+    display: flex;
+    align-items: stretch;
+    
+    gap: 10px;
+}
+
+@media screen and (max-width: 600px) {
+    nav ul {
+        flex-direction: column;
+        justify-content:space-around;
+        gap: 0px;
+    }
+
+    nav ul li {
+        flex: 1;
+    }
+}
+
+li > a {
+    display: flex;
+    align-items: center;
+    height: 100%;
+
+    padding: 0 10px;
+}
+
+nav ul li:hover {
+    background-color: #265e1a;
+}
+
+nav ul li:active {
+    background-color: #3b9e25;
+}
+
+main {
+    margin: 0;
+}
+
+main img {
+    width: 100%;
+}
+
+button:hover {
+    background-color: #73bb78;
+}
+
+button {
+    color: #464655;
+    background-color: #8fd694;
+    border: 1px solid #6fb874;
+    border-radius: 5px;
+}
+
+button[class*='create-new'], [type="submit"] {
+    margin: 10px;
+    padding: 10px 30px;
+}
+
+button[class*='create-new']:hover, [type="submit"]:hover {
+    background-color: #73bb78;
+}
+
+form [type="submit"] {
+    grid-column: 1 / -1;
+}
+
 footer {
     color: #d2d6d0;
     background-color: rgb(70, 70, 70);
+    padding: 10px;
 
     display: flex;
     align-items: center;
@@ -18,4 +126,22 @@ footer > a {
 footer > *:any-link {
     color: #e7e9e7;
     text-decoration: none;
+}
+
+dialog {
+
+    border-radius: 15px;
+    border-top-right-radius: 35px;
+
+    background-color: #59965d;
+}
+
+dialog > form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+form h2 {
+    color: aliceblue;
+    grid-column: 1 / -1;
 }
