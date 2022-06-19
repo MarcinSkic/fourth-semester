@@ -12,6 +12,17 @@ fetch('https://exercisedb.p.rapidapi.com/exercises', options)
 	.then(response => console.log(response))
 	.catch(err => console.error(err));*/
 
+class WorkoutSession {
+    constructor(){
+        this.usedTemplate = null;
+        this.date = null;
+    }
+
+    generateWorkoutSessionDialog(){
+        
+    }
+}
+
 class WorkoutTemplate{
 
     constructor(){
@@ -79,7 +90,7 @@ class WorkoutField{
     }
 
     //W tej i innych pokrewnych metodach nie używam innerHTML ponieważ użytkownik wprowadza dane, co grozi HTML injection
-    generateNewWorkoutField(){
+    generateWorkoutField(isDisabled,isRequired){
         let newField = document.createElement('div');   //Stworzenie elementu (jeszcze nie istnieje w DOM strony) i dodanie klasy
         newField.classList.add("template-field");
 
@@ -90,24 +101,24 @@ class WorkoutField{
         newField.appendChild(span); //Dodanie elementu span jako dziecka
 
         if(this.type.includes("sets-and-reps")){    //Jeżeli typ pola zawiera nazwę "sets-and-reps"
-            newField.appendChild(generateNumberPart('sets',this.name,true));    //Dodaj elementy
-            newField.appendChild(generateNumberPart('reps',this.name,true));
+            newField.appendChild(generateNumberPart('sets',this.name,isDisabled,isRequired));    //Dodaj elementy
+            newField.appendChild(generateNumberPart('reps',this.name,isDisabled,isRequired));
             if(this.type === "sets-and-reps-with-weight"){  //Jeżeli jest równe temu typowi
-                newField.appendChild(generateNumberPart('weight',this.name,true));  //Dodaj kolejny element
+                newField.appendChild(generateNumberPart('weight',this.name,isDisabled,isRequired));  //Dodaj kolejny element
             }
         }
         
         if(this.type === 'checkbox'){
-            newField.appendChild
+            newField.appendChild(generateCheckboxPart('checkbox',this.name,isDisabled,isRequired));
+        }
+
+        if(this.type === 'numerical'){
+            newField.appendChild(generateNumberPart('numerical',this.name,isDisabled,isRequired));
         }
 
         const addNewField = document.querySelector(".add-new-field");   //Znajdź element tworzenia nowych pól, żeby dodawać pola przed nim
         const fieldsContainer = document.querySelector(".fields-list"); //Znajdź element przechowujący wszystkie pola
         fieldsContainer.insertBefore(newField,addNewField); //Dodaj nowe pole przed elementem tworzącym pola
-    }
-
-    generateWorkoutField(){
-        //Used to generate fields of existing templates 
     }
 
     generateWorkoutFieldTitle(){
@@ -137,7 +148,7 @@ function generateTemplates(){
     });
 }
 
-function generateNumberPart(category,name,isDisabled){
+function generateNumberPart(category,name,isDisabled,isRequired){
     let label = document.createElement('label');
     let input = document.createElement('input');
 
@@ -148,15 +159,33 @@ function generateNumberPart(category,name,isDisabled){
     input.setAttribute('name',`${category}-${name}`);
     input.setAttribute('id',`${category}-${name}`)
     input.disabled = isDisabled;
+    input.required = isRequired;
 
     let container = document.createElement('div');
     container.classList.add('number-part');
-    container.append(label,input);
+
+    if(category !== 'numerical'){
+        container.append(label);
+    }
+
+    container.append(input);
+    
     return container;
 }
 
-function generateCheckboxPart(){
+function generateCheckboxPart(category,name,isDisabled,isRequired){
+    let input = document.createElement('input');
+    
+    input.setAttribute('type','checkbox');
+    input.setAttribute('name',`${category}-${name}`);
+    input.setAttribute('id',`${category}-${name}`)
+    input.disabled = isDisabled;
+    input.required = isRequired;
 
+    let container = document.createElement('div');
+    container.classList.add('checkbox-part');
+    container.append(input);
+    return container;
 }
 
 function capitalizeFirstLetter(string){
@@ -178,7 +207,7 @@ function openTemplateCreation(event){
     addTemplateField.addEventListener('click',tryCreatingTemplateField);
 
     const templateName = document.querySelector("#template-name");
-    templateName.addEventListener('input',onTemplateNameInstantChange);
+    templateName.addEventListener('input',onTemplateNameChange);
 
     dialog.addEventListener('cancel',onTemplateCreationCancel);
 
@@ -197,25 +226,13 @@ function tryCreatingTemplateField(){
         fieldName.setCustomValidity("");
     }
 
-     
-
     newWorkoutField = new WorkoutField(fieldName.value,fieldType.value);
-    newWorkoutField.generateNewWorkoutField();
+    newWorkoutField.generateWorkoutField(true,false);
 
     currentOpenedWorkoutTemplate.addField(newWorkoutField);
 }
 
 function onTemplateNameChange(event){
-    templatesList = getTemplatesList();
-
-    if(templatesList.find(element => element.name === event.target.value)){
-        event.target.setCustomValidity("There already exists template with that name");
-        event.target.addEventListener('input',onTemplateNameInstantChange);
-    }
-    //TODO: Add CSS warning that this name is taken
-}
-
-function onTemplateNameInstantChange(event){
     templatesList = getTemplatesList();
 
     if(templatesList.find(element => element.name === event.target.value)){

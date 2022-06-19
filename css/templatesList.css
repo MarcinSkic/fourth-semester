@@ -34,3 +34,7 @@
 .number-part [type="number"]{
     width: 3rem;
 }
+
+.number-part [type="number"][name*="numerical"]{
+    width: 6rem;
+}
