@@ -58,7 +58,7 @@
     </form>
     <div id="cart"></div>
     <script>
-        let i = 0;  
+
         let editedItemId = 0;   //Zmienna przechowująca aktualnie edytowany przedmiot
         //Polecenia wybierające elementy z DOM
         let nameInput = document.querySelector('#name');    
@@ -75,6 +75,9 @@
         document.querySelector('#show').addEventListener('click',showAllItems);
         document.querySelector('#delete').addEventListener('click',deleteItems);
         
+        class Product {
+
+        }
 
         function generateItem(item,id){ //Funkcja tworząca przedmiot w tabeli
             return '<tr>'+  //Rząd
@@ -118,6 +121,10 @@
 
             list[id] = item;    //Zapisanie przedmiotu pod tym samym id co zastępuje poprzedni przedmiot
 
+            nameInput.value = "";
+            priceInput.value = "";
+            colorInput.value = "";
+            amountInput.value = "";
            
             editButton.removeEventListener('click',saveEdition);    //Usunięcie eventu, dla bezpieczeństwa
             //Wyłącza przycisk akceptacji edycji i przywraca zwykłe przyciski
