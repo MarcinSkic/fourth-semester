@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="../JS/returnToMenu.js" defer></script>
+    <title>Dotacja</title>
+</head>
+<body>
+    <h2>Formularz dotacji</h2>
+    <form action="#" method="get">
+        <fieldset>
+            Beneficjent: <input list="names" type="text" id="name" name="name" required title="Wpisz lub wybierz z listy"> <br />
+            <datalist id="names">
+                <option value="Wioski Dziecięce SOS">
+                <option value="Polski Atom">
+                <option value="Szpital Chodźki">
+            </datalist>
+            Wartość dotacji <input type="number" min="20" step="1" title="Co najmniej 20" required>
+        </fieldset> <br />
+        <fieldset>
+            <legend>Dane karty płatniczej</legend>
+            Karta: <input type="radio" name="card" value="Visa" required>Visa <input type="radio" name="card" value="MC"> Master Card <br />
+            Numer: <input type="text" name="cardNumber" pattern="((^[0-9]{13}$)|(^[0-9]{16}$))?" title="Wpisz 13 lub 16 cyfr" required> <br />
+            Data ważności:  <input type="month" name="expirationDate" title="Podaj datę ważności karty" required> <br />
+            Kod CVV: <input type="text" title="Podaj 3 lub 4 cyfry z odwrotu " pattern="(^[0-9]{3}$)|(^[0-9]{4}$)" required>
+        </fieldset> <br />
+        Darczyńca <input type="text" title="Nazwa pod jaką będziesz rozpoznawany w naszej liście darczyńców" pattern="^[a-zA-Z_]{3}[a-zA-Z_]*$" required> <br />
+        <br /> <input type="submit" value="Rejestruj">
+    </form>
+</body>
+</html>

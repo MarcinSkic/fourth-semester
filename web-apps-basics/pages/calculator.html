@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--Doesn't work, connected-->
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../CSS/calculator.css" rel="stylesheet">
+    <script src="../JS/returnToMenu.js" defer></script>
+    <title>Kalkulatorek</title>
+</head>
+<body>
+    <fieldset>
+        <legend>Kalkulatorek</legend>
+        <section>
+            <h2>Wpisz liczby:</h2>
+            <p>X:</p>
+            <input id="x" value="">
+            <p>Y:</p>
+            <input id="y" value=""> <br />
+        </section>
+        <section>
+            <h2>Wskaż działanie:</h2>
+
+            <div class="radios">
+                <div><input type="radio" name="operation" id="+" value="+"> <label for="+">+</label> </div>
+                <div><input type="radio" name="operation" id="-" value="-"> <label for="-">-</label> </div>
+                <div><input type="radio" name="operation" id="*" value="*"> <label for="*">*</label> </div>
+                <div><input type="radio" name="operation" id="/" value="/"> <label for="/">/</label> </div>
+            </div> <br />
+            Wynik:
+            <input id="result" disabled>
+        </section>
+    </fieldset>
+    <script src="../JS/calculator.js"></script>
+</body>
+</html>

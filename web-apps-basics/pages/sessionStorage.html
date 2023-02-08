@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--<script src="../JS/returnToMenu.js" defer></script>-->
+    <title>SessionStorage</title>
+    <style>
+        .buttons {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body style="min-height: 30vh;">
+    <h1>Test Session Storage</h1>
+    <form action="#" method="get">
+        <label for="code">Kod koloru: </label> <input type="text" id="code" name="color-code">,
+        <label for="name">nazwa koloru: </label><input type="text" id="name" name="color-name">
+        <div class="buttons">
+            <button type="button" id="save">Zapisz parę</button>
+            <button type="button" id="show">Pokaż wszystkie pary</button>
+            <button type="button" id="delete">Usuń dane</button>
+        </div>
+        <div id="saved-colors">
+
+        </div>
+    </form>
+    <script>
+        let codeInput = document.querySelector('#code');
+        let nameInput = document.querySelector('#name');
+
+        let colorsList = document.querySelector('#saved-colors');
+
+        document.querySelector('#save').addEventListener('click',saveColor);
+        document.querySelector('#show').addEventListener('click',getColors);
+        document.querySelector('#delete').addEventListener('click',deleteColors);
+
+        function showColor(code, name){
+            colorsList.innerHTML += `<p style= "background-color: #${code};">${name}, kod koloru: ${code}</p>`;
+        }
+
+        function getColors(event){
+            colorsList.innerHTML = "";
+            for(let i = 0; i < sessionStorage.length; i++){
+                let key = sessionStorage.key(i);
+                let value = sessionStorage.getItem(key);
+                showColor(key,value);
+            }
+        }
+
+        function saveColor(event){
+            if(codeInput.value && nameInput.value){
+                console.log(codeInput.value);
+                sessionStorage.setItem(codeInput.value,nameInput.value);
+            }
+        }
+
+        function deleteColors(event) {
+            colorsList.innerHTML = "";
+            sessionStorage.clear();
+        }
+
+    </script>
+</body>
+</html>

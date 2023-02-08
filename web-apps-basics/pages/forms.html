@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pl">
+<!--Works, connected-->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formularze - Lab1</title>
+    <script src="../JS/validation.js"></script>
+
+    <link href="../CSS/style.css" rel="stylesheet">
+    <link href="../CSS/forms.css" rel="stylesheet">
+    
+</head>
+
+<body>
+    <div id="kontener">
+        <h2 id="baner">Szybki kurs HTML</h2>
+        <div id="menu">
+            <ul id="nav">
+                <li><a href="../index.html">Podstawy</a></li>
+                <li><a href="tables.html">Tabele</a></li>
+                <li><a href="">Formularze</a>
+                    <ul>
+                        <li><a href="forms.html">Pola formularza</a></li>
+                        <li><a href="calculations.html">Obliczenia w formularzu</a></li>
+                        <li><a href="calculator.html">Kalkulatorek</a></li>
+                    </ul>
+                </li>
+                <li><a href="" title="">Galeria</a></li>
+                <li><a href="">Inne</a>
+                    <ul>
+                        <li><a href="bootstrap.html">Bootstrap</a></li>
+                        <li><a href="dotations.html">Dotacja formularz</a></li>
+                        <li><a href="js1.html">Podstawy JS</a></li>
+                        <li><a href="jsSPA.html">Strona SPA</a></li>
+                        <li><a href="rwd.html">Strona RWD</a></li>
+                        <li><a href="slide.html">jQuery slideshow</a></li>
+                        <li><a href="validation.html">Walidacja</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div id="tresc">
+            <h3>Podstawowe znaczniki formularza HTML to:</h3>
+            <ul>
+                <li>&lt;form&gt; - znacznik podstawowy zawierający pola formularza</li>
+                <li>&lt;input&lt; - znacznik umożliwia wstawienie różnych pól (pole tekstowe, przycisk typu radio, zależności od wartości jego atrybutu type</li>
+                <li>&lt;select&gt; - pole formularza typu lista rozwijana</li>
+                <li>&lt;textarea&gt; - pole formularza typu obszar tekstowy</li>
+                <li>&lt;button&gt; - pole formularza typu przycisk</li>
+            </ul>
+            <div>
+                <h3>Przykładowy formularz HTML:</h3>
+                <form action="mailto:xxx@xxx.xx" method="post" onsubmit="return validate() && showData()">
+                    <div class="basic-info">
+                        <div class="info-row"  id="surname-cont"><label for="surname">Nazwisko:</label> <input type="text" name="surname" id="surname"/> </div>
+                        <div class="info-row" id="age-cont"><label for="age">Wiek:</label><input type="number" name="age" id="age"/></div>
+                        <div class="info-row"><label for="country" >Państwo:</label> <select name="country" id="country">
+                            <option value="pl">Polska</option>
+                            <option value="de">Niemcy</option>
+                            <option value="gb">Wielka Brytania</option>
+                            <option value="fr">Francja</option>
+                        </select></div>
+                        <div class="info-row" id="email-cont"><label for="email">Adres e-mail:</label> <input type="email" name="email" id="email"></div>
+                    </div>
+                    
+                    <h4>Zamawiam tutorial z języka:</h4>
+                    <div class="buttons" id="service-cont">
+                        <input type="checkbox" name="PHP" value="PHP" id="PHP" /> <label for="PHP">PHP</label>
+                        <input type="checkbox" name="C" value="C" id="C"/> <label for="C">C/C++</label>
+                        <input type="checkbox" name="Java" value="J" id="Java"/> <label for="Java">Java</label>
+                    </div>
+                    <h4>Sposób zapłaty:</h4>
+                    <div class="buttons" id="payment-cont">
+                        <input type="radio" name="payment" value="eu" id="eu" /> <label for="eu">eurocard</label>
+                        <input type="radio" name="payment" value="visa" id="visa" /> <label for="visa">visa</label>
+                        <input type="radio" name="payment" value="transfer" id="transfer" /> <label for="transfer">przelew bankowy</label>
+                    </div>
+                    <input type="submit" value="Wyślij" />
+                    <input type="reset" value="Anuluj" />
+                </form>
+            </div>
+        </div>
+        <div id="pasek">
+            <div class="box">
+                <h3>Walidatory:</h3>
+                <ul>
+                    <li> <a href="https://validator.w3.org/">HTML</a></li>
+                    <li> <a href="http://jigsaw.w3.org/css-validator/">CSS</a></li>
+                </ul>
+            </div>
+            <div class="box">
+                <h3>Kursy:</h3>
+                <ul>
+                    <li> <a href="https://www.w3schools.com/html/"> HTML </a></li>
+                    <li> <a href="https://www.w3schools.com/css/"> CSS </a></li>
+                    <li> <a href="https://www.w3schools.com/js/"> JS </a></li>
+                    <li> <a href="https://www.w3schools.com/php/"> PHP </a></li>
+                </ul>
+            </div>
+        </div>
+        <div id="stopka">&copy;BP</div>
+    </div>
+</body>
+
+</html>

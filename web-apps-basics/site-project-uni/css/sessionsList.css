@@ -1,0 +1,17 @@
+.template-form {
+    grid-column: 1 / -1;
+    color: aliceblue;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.header-container {
+    margin: 0 5px;
+}
+
+.sessions-container > div > div {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
