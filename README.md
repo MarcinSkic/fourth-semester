@@ -1,6 +1,12 @@
 # Embedded Systems
 Class in Uni about programming for ATmega32 in ZL3AVR KAMAMI development board. Showcasing basics of working with embedded systems
-
+## Concepts
+- Detailed LEDs control
+- Displaying numbers on 7 Segment Display
+- Embedded Timers
+- Multiplexed keypad 4x4 controled with 8 pins
+- System interruptions
+- Controlling simple LCD
 ---
 ### Used technologies
 [<img align="left" alt="EmbeddedC" width="26px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/embeddedc/embeddedc-original.svg" style="padding-right:10px;" />][embedded-c]
