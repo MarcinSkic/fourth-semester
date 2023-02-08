@@ -1,7 +1,7 @@
 # Programming paradigms
 Class in Uni about programming paradigms, showcased using different programming languages.
 ## Paradigms
-- Logic: Prolog
+- Logical: Prolog
 - Functional: Haskell & Python
 - OOP: Python
 ---
