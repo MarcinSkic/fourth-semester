@@ -4,6 +4,7 @@ Class in Uni about programming paradigms, showcased using different programming 
 - Logic: Prolog
 - Functional: Haskell & Python
 - OOP: Python
+---
 ### Used technologies
 [<img align="left" alt="Prolog" width="26px" src="./readme-icons/prolog.png" style="padding-right:10px;" />][prolog]
 [<img align="left" alt="Haskell" width="26px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/haskell/haskell-original.svg" style="padding-right:10px;"/>][haskell]
