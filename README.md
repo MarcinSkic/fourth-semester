@@ -1,5 +1,6 @@
 # Web Apps Basics
-Class in Uni about frontend languages and developing websites. [Final project](https://github.com/MarcinSkic/site-project-uni)
+Class in Uni about frontend languages and developing websites.
+> Final project in *site-project-uni* directory
 
 ---
 ### Used technologies
