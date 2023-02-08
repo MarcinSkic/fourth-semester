@@ -9,6 +9,8 @@ Classes at the University I took in fourth semester
 - Basics of Software Engineering
 - Information Security
 - Basics of Digital Electronics
+<h6 align="right">*Git history dates rewritten to show when given class approximately finished</h6>
+
 ---
 ### Used technologies
 [<img align="left" alt="EmbeddedC" width="26px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/embeddedc/embeddedc-original.svg" style="padding: 0 20px 20px 0" />][embedded-c]
